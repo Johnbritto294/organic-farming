@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Stackly Organic Farm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1F3B2C;
+  --forest-2:#122318;
+  --wheat:#D4A544;
+  --wheat-2:#E9C876;
+  --clay:#A6613A;
+  --cream:#F6F1E4;
+  --paper:#FCFAF3;
+  --sage:#7C9473;
+  --ink:#1A1F1B;
+  --ink-soft:#4B564C;
+  --line: rgba(26,31,27,0.12);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif; color:var(--ink); background:var(--paper);
+  overflow-x:hidden; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{
+  font-family:'Fraunces', serif; font-weight:600; line-height:1.1; color:var(--forest);
+}
+a{color:inherit; text-decoration:none;}
+img{display:block; max-width:100%;}
+
+.eyebrow{
+  font-family:'JetBrains Mono', monospace; font-size:0.75rem; letter-spacing:0.18em;
+  text-transform:uppercase; color:var(--clay); display:flex; align-items:center; gap:10px; margin-bottom:18px;
+}
+.eyebrow::before{content:""; width:26px; height:1px; background:var(--clay); display:inline-block;}
+.wrap{max-width:1240px; margin:0 auto; padding:0 40px;}
+@media (max-width:640px){ .wrap{padding:0 22px;} }
+
+/* ---------- Premium Dark Glassmorphic Sticky Navbar ---------- */
+header{
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  display:flex; align-items:center; justify-content:center;
+  padding:18px 40px; background:rgba(18,35,24,0.85); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(212,165,68,0.2);
+  transition:all 0.35s ease; box-shadow:0 8px 30px rgba(0,0,0,0.25);
+}
+header.scrolled{
+  background:rgba(12,23,16,0.96);
+  padding:12px 40px;
+  box-shadow:0 12px 35px rgba(0,0,0,0.45);
+  border-bottom-color:rgba(212,165,68,0.35);
+}
+.logo{position:absolute; left:40px; top:50%; transform:translateY(-50%); display:inline-flex; align-items:center;}
+.logo-img{
+  height:40px; width:auto; max-width:180px; object-fit:contain; display:block;
+  transition:transform 0.3s ease;
+}
+.logo-img:hover{transform:scale(1.03);}
+.logo-dark{display:none !important;}
+.logo-light{display:block !important;}
+
+nav.links{display:flex; gap:8px; align-items:center;}
+nav.links a{
+  font-size:0.92rem; font-weight:600; color:rgba(252,250,243,0.88) !important;
+  position:relative; padding:8px 18px; border-radius:100px; letter-spacing:0.02em;
+  transition:all 0.3s ease; text-decoration:none; text-shadow:none !important;
+}
+nav.links a:hover{
+  color:var(--wheat-2) !important; background:rgba(252,250,243,0.12) !important; transform:translateY(-2px);
+}
+nav.links a.active{
+  background:var(--wheat) !important; color:var(--forest-2) !important; font-weight:700 !important;
+  box-shadow:0 4px 16px rgba(212,165,68,0.35);
+}
+header.scrolled nav.links a{ color:rgba(252,250,243,0.9) !important; }
+header.scrolled nav.links a:hover{ color:var(--wheat-2) !important; background:rgba(252,250,243,0.14) !important; }
+header.scrolled nav.links a.active{ background:var(--wheat) !important; color:var(--forest-2) !important; }
+
+.nav-cta{
+  padding:10px 24px; border-radius:100px;
+  background:var(--wheat); color:var(--forest-2)!important;
+  font-weight:700; font-size:0.86rem;
+  transition:background 0.3s ease;
+  box-shadow:0 4px 14px rgba(212,165,68,0.3);
+}
+.nav-cta:hover{background:var(--wheat-2);}
+#loginNavBtn{position:absolute; right:40px; top:50%; transform:translateY(-50%); z-index:1;}
+.menu-btn{display:none; position:absolute; right:40px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--paper); font-size:1.6rem;}
+header.scrolled .menu-btn{color:var(--paper);}
+@media (max-width:1140px){ nav.links{gap:8px;} nav.links a{font-size:0.9rem; padding:8px 14px;} }
+@media (max-width:980px){
+  header{ min-height:64px !important; padding:14px 20px !important; display:flex !important; align-items:center !important; justify-content:space-between !important; }
+  header.scrolled{ min-height:58px !important; padding:12px 20px !important; }
+  .logo{ position:relative !important; top:auto !important; left:auto !important; transform:none !important; display:flex !important; align-items:center !important; z-index:1002 !important; margin:0 !important; padding:0 !important; }
+  .logo-img{ height:30px !important; width:auto !important; max-width:150px !important; object-fit:contain !important; }
+  .logo-light{ display:block !important; }
+  .logo-dark{ display:none !important; }
+  .menu-btn{ display:flex !important; position:relative !important; top:auto !important; right:auto !important; transform:none !important; z-index:1002 !important; margin:0 !important; }
+  nav.links{display:none !important;}
+  #loginNavBtn{display:none !important;}
+}
+
+/* mobile drawer */
+.mobile-nav-overlay{
+  position:fixed; inset:0; z-index:2500; background:rgba(18,35,24,0.97); backdrop-filter:blur(14px);
+  display:none !important; flex-direction:column; justify-content:flex-start; align-items:center; gap:16px; padding-top:110px; overflow-y:auto;
+  opacity:0; visibility:hidden; pointer-events:none; transition:opacity 0.4s ease, visibility 0.4s ease;
+}
+.mobile-nav-overlay.open{display:flex !important; opacity:1 !important; visibility:visible !important; pointer-events:auto !important;}
+.mobile-nav-overlay a{font-family:'Fraunces', serif; font-size:1.5rem; color:var(--paper); transition:color 0.3s ease;}
+.mobile-nav-overlay a.active{color:var(--wheat-2);}
+.mobile-nav-close{position:absolute; top:24px; right:28px; background:none; border:none; color:var(--paper); font-size:2.2rem; cursor:pointer;}
+
+/* login modal */
+.login-modal-overlay{
+  position:fixed; inset:0; z-index:3500; background:rgba(18,35,24,0.85); backdrop-filter:blur(10px);
+  display:none !important; align-items:center; justify-content:center; padding:20px;
+  opacity:0; visibility:hidden; pointer-events:none; transition:opacity 0.35s ease, visibility 0.35s ease;
+}
+.login-modal-overlay.open{display:flex !important; opacity:1 !important; visibility:visible !important; pointer-events:auto !important;}
+.login-card-modal{
+  background:var(--paper); width:100%; max-width:440px; border-radius:26px; padding:40px;
+  border:1px solid var(--line); box-shadow:0 30px 60px rgba(0,0,0,0.3); position:relative; transform:scale(0.92); transition:transform 0.35s ease;
+}
+.login-modal-overlay.open .login-card-modal{transform:scale(1);}
+.login-modal-close{
+  position:absolute; top:20px; right:20px; width:36px; height:36px; border-radius:50%;
+  background:rgba(31,59,44,0.06); border:none; color:var(--forest); font-size:1.2rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.login-modal-head{text-align:center; margin-bottom:28px;}
+.login-modal-head h3{font-size:1.8rem; font-weight:600; color:var(--forest);}
+.login-modal-head p{color:var(--ink-soft); font-size:0.9rem; margin-top:6px;}
+.social-login-row{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:22px;}
+.btn-social{
+  padding:11px 16px; border-radius:100px; border:1px solid var(--line); background:var(--paper);
+  font-size:0.85rem; font-weight:500; color:var(--ink); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+}
+.login-divider{display:flex; align-items:center; gap:14px; margin:20px 0; color:var(--ink-soft); font-size:0.78rem; font-family:'JetBrains Mono', monospace;}
+.login-divider::before, .login-divider::after{content:""; flex-grow:1; height:1px; background:var(--line);}
+.login-form-group{margin-bottom:18px;}
+.login-form-group label{display:block; font-family:'JetBrains Mono', monospace; font-size:0.72rem; text-transform:uppercase; color:var(--ink); letter-spacing:0.08em; margin-bottom:6px;}
+.login-form-group input{
+  width:100%; padding:14px 16px; border-radius:14px; border:1px solid var(--line); font-size:0.95rem; background:var(--paper); color:var(--ink);
+}
+.login-options-row{display:flex; justify-content:space-between; align-items:center; font-size:0.82rem; margin-bottom:24px;}
+.login-remember{display:flex; align-items:center; gap:8px; color:var(--ink-soft); cursor:pointer;}
+.login-forgot{color:var(--clay); font-weight:600;}
+
+/* page hero */
+@keyframes pageHeroEyebrowIn {
+  0% { opacity: 0; transform: translateY(-16px); letter-spacing: 0.12em; }
+  100% { opacity: 1; transform: translateY(0); letter-spacing: 0.2em; }
+}
+
+@keyframes pageHeroTitleIn {
+  0% { opacity: 0; transform: translateY(32px) scale(0.97); filter: blur(10px); }
+  100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
+}
+
+@keyframes pageHeroSubIn {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes eyebrowBarPulse {
+  0% { width: 20px; opacity: 0.6; box-shadow: 0 0 4px rgba(233,200,118,0.4); }
+  100% { width: 36px; opacity: 1; box-shadow: 0 0 14px rgba(233,200,118,0.9); }
+}
+
+@keyframes goldShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.page-hero{
+  background: linear-gradient(180deg, rgba(18, 35, 24, 0.42) 0%, rgba(18, 35, 24, 0.25) 50%, rgba(18, 35, 24, 0.68) 100%), url('images/contactbg.webp') center/cover no-repeat;
+  color:var(--paper); padding:160px 0 80px; position:relative; overflow:hidden;
+}
+.page-hero::before{
+  content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 40%, rgba(0,0,0,0) 20%, rgba(18,35,24,0.35) 100%); pointer-events:none;
+}
+
+.page-hero .eyebrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  animation: pageHeroEyebrowIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+.page-hero .eyebrow::before {
+  content: ""; width: 28px; height: 2px;
+  background: linear-gradient(90deg, var(--wheat), var(--wheat-2));
+  display: inline-block; border-radius: 2px;
+  animation: eyebrowBarPulse 2.5s ease-in-out infinite alternate;
+}
+
+.page-hero h1 {
+  font-size: clamp(2.5rem, 5vw, 4.2rem); color: var(--paper); margin-top: 10px; font-weight: 600; line-height: 1.15;
+  animation: pageHeroTitleIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  opacity: 0; text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+.page-hero h1 em, .page-hero h1 span.highlight {
+  font-style: italic;
+  background: linear-gradient(120deg, #E9C876 0%, #FFF8DB 35%, #D4A544 70%, #E9C876 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: goldShimmer 6s linear infinite;
+  display: inline-block;
+}
+
+.page-hero p {
+  font-size: 1.1rem; color: rgba(252,250,243,0.92); max-width: 620px; margin-top: 16px; line-height: 1.65;
+  animation: pageHeroSubIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+  opacity: 0; text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+/* contact layout */
+.contact-grid{display:grid; grid-template-columns:1fr 1.3fr; gap:50px; align-items:start; margin:60px 0 100px;}
+@media (max-width:900px){ .contact-grid{grid-template-columns:1fr; gap:40px;} }
+
+.contact-info-col{display:flex; flex-direction:column; gap:20px;}
+.contact-card{
+  background:var(--cream); padding:28px; border-radius:22px; display:flex; gap:22px; align-items:flex-start;
+  border:1px solid var(--line); transition:transform 0.3s ease, box-shadow 0.3s ease;
+}
+.contact-card:hover{transform:translateX(8px); box-shadow:0 14px 35px rgba(31,59,44,0.08);}
+.contact-card .icon{font-size:2rem; flex-shrink:0; background:rgba(31,59,44,0.06); width:54px; height:54px; border-radius:16px; display:flex; align-items:center; justify-content:center;}
+.contact-card h4{font-size:1.2rem; color:var(--forest); margin-bottom:6px;}
+.contact-card p{color:var(--ink-soft); font-size:0.95rem; line-height:1.55;}
+
+.contact-form-col{
+  background:var(--paper); padding:44px; border-radius:28px; border:1px solid var(--line);
+  box-shadow:0 18px 45px rgba(31,59,44,0.08); width:100%; max-width:100%; box-sizing:border-box;
+}
+.form-row{display:grid; grid-template-columns:1fr 1fr; gap:20px; width:100%; max-width:100%; box-sizing:border-box;}
+@media (max-width:600px){ .form-row{grid-template-columns:1fr;} }
+.form-group{display:flex; flex-direction:column; gap:8px; margin-bottom:22px; width:100%; max-width:100%; box-sizing:border-box;}
+.form-group label{font-family:'JetBrains Mono', monospace; font-size:0.75rem; text-transform:uppercase; color:var(--ink); letter-spacing:0.08em;}
+
+/* Custom In-DOM Dropdown Menu (Prevents Desktop/Mobile OS Popup Overflow) */
+.custom-select-box {
+  position: relative; width: 100%; max-width: 100%; box-sizing: border-box;
+}
+
+.custom-select-trigger {
+  width: 100%; max-width: 100%; box-sizing: border-box;
+  padding: 16px 20px; border-radius: 14px; border: 1px solid var(--line);
+  font-family: 'Inter', sans-serif; font-size: 0.95rem; background: var(--paper);
+  color: var(--ink); text-align: left; display: flex; justify-content: space-between;
+  align-items: center; cursor: pointer; transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.custom-select-trigger:focus,
+.custom-select-box.open .custom-select-trigger {
+  outline: none; border-color: var(--forest); box-shadow: 0 0 0 3px rgba(31,59,44,0.12);
+}
+
+.custom-select-arrow {
+  font-size: 1rem; color: var(--forest); transition: transform 0.3s ease;
+}
+
+.custom-select-box.open .custom-select-arrow {
+  transform: rotate(180deg);
+}
+
+.custom-select-menu {
+  position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+  width: 100%; max-width: 100%; box-sizing: border-box;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 16px;
+  box-shadow: 0 16px 36px rgba(31,59,44,0.18); z-index: 1000; display: none;
+  overflow: hidden; animation: customDropdownFade 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes customDropdownFade {
+  0% { opacity: 0; transform: translateY(-8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.custom-select-box.open .custom-select-menu {
+  display: block;
+}
+
+.custom-select-item {
+  padding: 13px 18px; font-size: 0.9rem; color: var(--ink); cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease; border-bottom: 1px solid rgba(31,59,44,0.05);
+}
+
+.custom-select-item:last-child {
+  border-bottom: none;
+}
+
+.custom-select-item.placeholder {
+  color: var(--ink-soft); font-style: italic;
+}
+
+.custom-select-item:hover,
+.custom-select-item.selected {
+  background: var(--wheat); color: var(--forest-2); font-weight: 600;
+}
+
+.form-group input, .form-group select, .form-group textarea{
+  width:100%; max-width:100%; box-sizing:border-box;
+  padding:16px 20px; border-radius:14px; border:1px solid var(--line); font-family:'Inter', sans-serif;
+  font-size:0.95rem; background:var(--paper); color:var(--ink); transition:border-color 0.3s ease;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus{
+  outline:none; border-color:var(--forest); box-shadow:0 0 0 3px rgba(31,59,44,0.12);
+}
+
+@media (max-width: 768px) {
+  .contact-grid {
+    margin: 30px 0 60px !important; gap: 30px !important; grid-template-columns: 1fr !important;
+    width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;
+  }
+  .contact-form-col {
+    padding: 24px 18px !important; border-radius: 20px !important;
+    width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important;
+  }
+  .form-row {
+    grid-template-columns: 1fr !important; gap: 16px !important;
+    width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;
+  }
+  .form-group {
+    width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;
+  }
+  .form-group input, .form-group select, .form-group textarea, .custom-select-trigger {
+    font-size: 0.9rem !important; padding: 13px 14px !important;
+    width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;
+  }
+  .custom-select-menu { border-radius: 14px !important; }
+  .custom-select-item { padding: 11px 14px !important; font-size: 0.88rem !important; }
+}
+
+/* ----- 1. Live Gate Hours & Status Board ----- */
+.farm-status-section {
+  padding: 100px 0; background: var(--forest-2); color: var(--paper); border-top: 1px solid rgba(212,165,68,0.2);
+}
+.status-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 45px; }
+@media(max-width:960px){ .status-grid { grid-template-columns: 1fr; } }
+
+.status-card {
+  background: rgba(31,59,44,0.4); border: 1px solid rgba(252,250,243,0.14); border-radius: 24px; padding: 28px;
+  backdrop-filter: blur(10px); transition: all 0.35s ease;
+}
+.status-card:hover { transform: translateY(-6px); background: rgba(31,59,44,0.7); border-color: var(--wheat); }
+.status-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.status-dot { width: 10px; height: 10px; border-radius: 50%; background: #2ecc71; box-shadow: 0 0 12px #2ecc71; animation: statusPulse 2s infinite; }
+@keyframes statusPulse { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.4); opacity: 0.6; } 100% { transform: scale(1); opacity: 1; } }
+.status-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--wheat-2); text-transform: uppercase; }
+.status-title { font-family: 'Fraunces', serif; font-size: 1.3rem; color: var(--paper); margin-bottom: 6px; }
+.status-detail { font-size: 0.86rem; color: rgba(252,250,243,0.75); line-height: 1.5; }
+
+/* ----- 2. Transport & Route Finder ----- */
+.route-finder-section {
+  padding: 100px 0; background: var(--cream); color: var(--ink); border-top: 1px solid var(--line);
+}
+.route-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; margin-top: 45px; }
+@media(max-width:960px){ .route-grid { grid-template-columns: 1fr; } }
+
+.route-options { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.route-btn {
+  padding: 10px 20px; border-radius: 100px; border: 1px solid var(--line); background: var(--paper);
+  font-size: 0.85rem; font-weight: 600; color: var(--forest); cursor: pointer; transition: all 0.3s ease;
+}
+.route-btn.active, .route-btn:hover { background: var(--forest); color: var(--paper); border-color: var(--forest); }
+
+.route-card {
+  background: var(--paper); border-radius: 24px; padding: 32px; border: 1px solid var(--line);
+  box-shadow: 0 18px 40px rgba(31,59,44,0.08);
+}
+.route-title { font-family: 'Fraunces', serif; font-size: 1.4rem; color: var(--forest); margin-bottom: 10px; }
+.route-desc { font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6; margin-bottom: 20px; }
+.route-step-item { display: flex; align-items: center; gap: 10px; font-size: 0.85rem; font-family: 'JetBrains Mono', monospace; color: var(--forest); margin-bottom: 8px; }
+
+/* ----- 3. Inquiry Type Selector Assistant ----- */
+.inquiry-helper { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.inquiry-chip {
+  padding: 8px 16px; border-radius: 100px; border: 1px solid var(--line); background: var(--cream);
+  font-size: 0.8rem; font-weight: 500; color: var(--ink-soft); cursor: pointer; transition: all 0.3s ease;
+}
+.inquiry-chip.active, .inquiry-chip:hover { background: var(--forest); color: var(--paper); border-color: var(--forest); }
+
+/* map section */
+.map-wrap-box{
+  background:var(--cream); padding:50px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+}
+.map-card-inner{
+  aspect-ratio:16/9; max-height:480px; border-radius:24px; overflow:hidden; position:relative;
+  background:linear-gradient(135deg,#DCE7CE,#EEE7CF); border:1px solid var(--line);
+}
+
+/* FAQ section */
+.faq-section{padding:90px 0;}
+.faq-list{max-width:800px; margin:40px auto 0;}
+.faq-item{border-bottom:1px solid var(--line);}
+.faq-q{
+  width:100%; text-align:left; background:none; border:none; cursor:pointer;
+  padding:26px 4px; display:flex; justify-content:space-between; align-items:center; gap:20px;
+  font-family:'Fraunces', serif; font-size:1.2rem; color:var(--forest); font-weight:500;
+}
+.faq-q .plus{
+  flex-shrink:0; width:32px; height:32px; border-radius:50%; border:1px solid var(--line);
+  display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:var(--clay); transition:all 0.3s ease;
+}
+.faq-item.open .faq-q .plus{transform:rotate(135deg); background:var(--wheat); color:var(--forest-2); border-color:var(--wheat);}
+.faq-a{max-height:0; overflow:hidden; transition:max-height 0.45s ease, padding 0.45s ease; color:var(--ink-soft); font-size:0.98rem; line-height:1.65;}
+.faq-item.open .faq-a{max-height:240px; padding-bottom:24px;}
+
+/* ---------- premium footer with soil background & 3 top contact cards ---------- */
+footer{
+  position:relative; background:var(--forest-2); color:rgba(252,250,243,0.95);
+  padding:0; overflow:hidden; border-top:1px solid rgba(212,165,68,0.3);
+}
+.footer-bg{
+  position:absolute; inset:0; z-index:1;
+  background-image:url('images/footer_bg.webp');
+  background-size:cover; background-position:center; filter:brightness(0.48) contrast(1.05);
+  transform:scale(1.04); transition:transform 10s ease;
+}
+footer:hover .footer-bg{transform:scale(1);}
+
+.footer-overlay{
+  position:relative; z-index:2;
+  background:linear-gradient(180deg, rgba(18,35,24,0.72) 0%, rgba(18,35,24,0.85) 100%);
+  padding:80px 0 30px;
+}
+
+/* Top 3 Contact Cards Row */
+.footer-contact-row{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:30px;
+  padding-bottom:44px; border-bottom:1px solid rgba(212,165,68,0.25); margin-bottom:54px;
+}
+@media (max-width:900px){
+  .footer-contact-row{grid-template-columns:1fr; gap:26px;}
+}
+
+.footer-contact-item{
+  display:flex; align-items:center; gap:18px;
+}
+.footer-contact-icon{
+  width:56px; height:56px; border-radius:50%; background:var(--wheat); color:var(--forest-2);
+  display:flex; align-items:center; justify-content:center; font-size:1.35rem; flex-shrink:0;
+  box-shadow:0 8px 22px rgba(212,165,68,0.35); transition:transform 0.3s ease, background 0.3s ease;
+}
+.footer-contact-item:hover .footer-contact-icon{
+  transform:scale(1.1) rotate(6deg); background:var(--wheat-2);
+}
+.footer-contact-info label{
+  display:block; font-weight:700; color:var(--paper); font-size:0.98rem; margin-bottom:4px; font-family:'Inter', sans-serif;
+  text-shadow:0 2px 8px rgba(0,0,0,0.6);
+}
+.footer-contact-info p{
+  color:rgba(252,250,243,0.92); font-size:0.88rem; line-height:1.45; margin:0;
+  text-shadow:0 1px 4px rgba(0,0,0,0.5);
+}
+
+/* Main 4 Columns Grid */
+.footer-main-grid{
+  display:grid; grid-template-columns:1.3fr 1fr 1fr 1.3fr; gap:44px; padding-bottom:56px;
+}
+@media (max-width:1024px){
+  .footer-main-grid{grid-template-columns:1fr 1fr; gap:40px;}
+}
+@media (max-width:600px){
+  .footer-main-grid{grid-template-columns:1fr; gap:36px;}
+}
+
+.footer-brand{
+  display:flex; flex-direction:column; align-items:flex-start; text-align:left;
+}
+.footer-logo-wrap{
+  display:block !important; margin-bottom:18px !important; text-decoration:none !important; width:auto !important;
+}
+.footer-logo-pic{
+  height:44px !important; width:auto !important; max-width:210px !important; object-fit:contain !important; display:block !important; opacity:1 !important; visibility:visible !important;
+}
+.footer-brand p{
+  color:rgba(252,250,243,0.92); font-size:0.9rem; line-height:1.65; margin:0 0 22px 0; max-width:320px; text-align:left; display:block !important; width:100% !important;
+  text-shadow:0 1px 4px rgba(0,0,0,0.5);
+}
+.footer-socials{
+  display:flex; gap:12px; align-items:center;
+}
+.footer-social-link{
+  width:40px; height:40px; border-radius:50%; background:rgba(252,250,243,0.08);
+  border:1px solid rgba(252,250,243,0.18); color:var(--paper); display:flex; align-items:center;
+  justify-content:center; font-size:0.9rem; transition:all 0.3s ease; text-decoration:none;
+}
+.footer-social-link:hover{
+  background:var(--wheat); color:var(--forest-2); border-color:var(--wheat); transform:translateY(-4px);
+}
+
+.footer-col h4{
+  font-family:'Fraunces', serif; font-size:1.25rem; font-weight:600; color:var(--paper);
+  margin-bottom:22px; position:relative; padding-bottom:10px; display:inline-block;
+  text-shadow:0 2px 8px rgba(0,0,0,0.6);
+}
+.footer-col h4::after{
+  content:""; position:absolute; bottom:0; left:0; width:36px; height:3px;
+  background:var(--wheat); border-radius:3px;
+}
+
+.footer-col a{
+  display:block; color:rgba(252,250,243,0.9); font-size:0.92rem; margin-bottom:12px;
+  transition:color 0.3s ease, transform 0.3s ease; text-shadow:0 1px 4px rgba(0,0,0,0.5);
+}
+.footer-col a:hover{
+  color:var(--wheat-2); transform:translateX(6px);
+}
+
+/* Newsletter Subscribe Input Box */
+.footer-newsletter-text{
+  color:rgba(252,250,243,0.92); font-size:0.92rem; line-height:1.6; margin-bottom:20px;
+  text-shadow:0 1px 4px rgba(0,0,0,0.5);
+}
+.footer-newsletter-form{
+  position:relative; display:flex; align-items:center; background:rgba(252,250,243,0.95);
+  border-radius:100px; padding:6px 6px 6px 20px; box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+.footer-newsletter-input{
+  width:100%; border:none; background:none; outline:none; font-family:'Inter', sans-serif;
+  font-size:0.88rem; color:var(--ink);
+}
+.footer-newsletter-btn{
+  width:44px; height:44px; border-radius:50%; background:var(--wheat); color:var(--forest-2);
+  border:none; cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; transition:transform 0.3s ease, background 0.3s ease;
+}
+.footer-newsletter-btn:hover{
+  transform:scale(1.1) rotate(12deg); background:var(--wheat-2);
+}
+
+/* Bottom Bar */
+.footer-bottom-bar{
+  border-top:1px solid rgba(252,250,243,0.18); padding-top:28px;
+  display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;
+  color:rgba(252,250,243,0.85); flex-wrap:wrap; gap:16px;
+  text-shadow:0 1px 4px rgba(0,0,0,0.5);
+}
+.footer-bottom-links{
+  display:flex; gap:22px; align-items:center;
+}
+.footer-bottom-links a{
+  color:rgba(252,250,243,0.65); transition:color 0.3s ease;
+}
+.footer-bottom-links a:hover{
+  color:var(--wheat-2);
+}
+
+/* Yellow Floating To-Top Button */
+.footer-to-top-btn{
+  width:46px; height:46px; border-radius:50%; background:var(--wheat); color:var(--forest-2);
+  display:inline-flex; align-items:center; justify-content:center; font-size:1.2rem;
+  box-shadow:0 10px 25px rgba(212,165,68,0.4); transition:transform 0.3s ease, background 0.3s ease; text-decoration:none;
+}
+.footer-to-top-btn:hover{
+  transform:scale(1.15) translateY(-4px); background:var(--wheat-2); color:var(--forest-2);
+}
+</style>
+<style>
+
+/* ---------- Unique Stackly Agriculture Preloader Overlay ---------- */
+.stackly-preloader {
+  position: fixed; inset: 0; z-index: 999999;
+  background: rgba(18, 35, 24, 0.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease;
+  pointer-events: none;
+}
+
+.stackly-preloader.active {
+  opacity: 1; visibility: visible; pointer-events: auto;
+}
+
+.preloader-content {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 40px 32px; border-radius: 28px; background: rgba(31, 59, 44, 0.5);
+  border: 1px solid rgba(212, 165, 68, 0.4); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+  max-width: 380px; width: 88%; transform: scale(0.92); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stackly-preloader.active .preloader-content {
+  transform: scale(1);
+}
+
+.preloader-agri-symbol {
+  position: relative; width: 80px; height: 80px; display: flex; align-items: center;
+  justify-content: center; margin-bottom: 18px;
+}
+
+.agri-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px dashed rgba(212, 165, 68, 0.6);
+  border-top-color: #E9C876; border-right-color: #D4A544;
+  animation: agriRingSpin 1.2s linear infinite;
+}
+
+.agri-ring-outer {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px solid rgba(233, 200, 118, 0.25);
+  animation: agriPulseGlow 1.5s ease-in-out infinite alternate;
+}
+
+.agri-icon {
+  font-size: 2.5rem; filter: drop-shadow(0 0 14px rgba(212, 165, 68, 0.9));
+  animation: agriBounce 0.6s ease-in-out infinite alternate;
+}
+
+.preloader-logo-wrap {
+  margin-bottom: 22px;
+}
+
+.preloader-logo-img {
+  height: 44px; width: auto; object-fit: contain;
+  filter: drop-shadow(0 4px 18px rgba(212, 165, 68, 0.5));
+  animation: logoGlow 1.2s ease-in-out infinite alternate;
+}
+
+.preloader-track {
+  width: 100%; height: 5px; background: rgba(252, 250, 243, 0.14);
+  border-radius: 100px; overflow: hidden; margin-bottom: 16px; position: relative;
+}
+
+.preloader-fill {
+  height: 100%; width: 0%; border-radius: 100px;
+  background: linear-gradient(90deg, #D4A544, #FFF8DB, #E9C876);
+  box-shadow: 0 0 14px rgba(233, 200, 118, 0.95);
+  transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.preloader-subtext {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+  color: rgba(252, 250, 243, 0.78); letter-spacing: 0.16em; text-transform: uppercase;
+}
+
+@keyframes agriRingSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes agriPulseGlow { 0% { transform: scale(0.95); opacity: 0.4; } 100% { transform: scale(1.08); opacity: 0.9; } }
+@keyframes agriBounce { 0% { transform: scale(0.92) translateY(0); } 100% { transform: scale(1.1) translateY(-5px); } }
+@keyframes logoGlow { 0% { opacity: 0.85; filter: drop-shadow(0 2px 8px rgba(212, 165, 68, 0.3)); } 100% { opacity: 1; filter: drop-shadow(0 6px 20px rgba(233, 200, 118, 0.9)); } }
+
+</style>
+</head>
+<body>
+
+<div class="mobile-nav-overlay" id="mobileDrawer">
+  <button class="mobile-nav-close" id="mobileDrawerClose" aria-label="Close menu">✕</button>
+  <div class="mobile-drawer-brand" style="margin-bottom: 20px; text-align: center;">
+    <img src="logo_matching_light.webp" alt="Stackly Logo" style="height: 38px; width: auto; display: inline-block;">
+  </div>
+
+  <a href="home.html">Home</a>
+  <a href="shop.html">Shop</a>
+  <a href="journal.html">Journal</a>
+  <a href="blog.html">Blog</a>
+  <a href="about.html">About</a>
+  <a href="contact.html" class="active">Contact</a>
+  <a href="#login" class="nav-cta" onclick="closeMobileDrawer(); window.location.href='login.html';" style="margin-top:10px;">Login</a>
+</div>
+
+<!-- Login Modal -->
+<div class="login-modal-overlay" id="loginModal">
+  <div class="login-card-modal">
+    <button class="login-modal-close" id="loginModalClose" aria-label="Close login modal">✕</button>
+    <div class="login-modal-head">
+      <h3>Welcome Back</h3>
+      <p>Sign in to manage your CSA share, orders & preferences.</p>
+    </div>
+    <div class="social-login-row">
+      <button class="btn-social" type="button" onclick="alert('Google Sign-In connected!'); closeLoginModal();">Google</button>
+      <button class="btn-social" type="button" onclick="alert('Apple Sign-In connected!'); closeLoginModal();">Apple</button>
+    </div>
+    <div class="login-divider">OR LOGIN WITH EMAIL</div>
+    <form onsubmit="event.preventDefault(); alert('Signed in successfully!'); closeLoginModal();">
+      <div class="login-form-group">
+        <label>Email Address</label>
+        <input type="email" placeholder="your@email.com" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" title="Email must include a valid domain (e.g. name@domain.com)">
+      </div>
+      <div class="login-form-group">
+        <label>Password</label>
+        <input type="password" placeholder="••••••••" required>
+      </div>
+      <div class="login-options-row">
+        <label class="login-remember"><input type="checkbox" checked> Remember me</label>
+        <a href="#forgot" class="login-forgot" onclick="event.preventDefault(); alert('Reset link sent!');">Forgot password?</a>
+      </div>
+      <button type="submit" style="width:100%; padding:14px; background:var(--wheat); color:var(--forest-2); font-weight:600; border:none; border-radius:100px; cursor:pointer;">Sign In →</button>
+    </form>
+  </div>
+</div>
+
+<header id="siteHeader">
+  <a href="home.html" class="logo" aria-label="Stackly — Stackly Organic Farm" onclick="triggerLogoPreloader(event)">
+    <img src="logo_matching_light.webp" alt="Stackly Logo" class="logo-img logo-light">
+    <img src="logo_matching_dark.webp" alt="Stackly Logo" class="logo-img logo-dark">
+  </a>
+  <nav class="links">
+    <a href="home.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="journal.html">Journal</a>
+    <a href="blog.html">Blog</a>
+    <a href="about.html">About</a>
+    <a href="contact.html" class="active">Contact</a>
+  </nav>
+  <a href="login.html" class="nav-cta" id="loginNavBtn">Login</a>
+  <button class="menu-btn" id="menuToggleBtn" aria-label="Menu">☰</button>
+</header>
+
+<div class="page-hero">
+  <div class="wrap">
+    <div class="eyebrow" style="color:var(--wheat-2)">Get in Touch</div>
+    <h1>Connect With <em>Stackly Farm</em></h1>
+    <p>Have a question about our weekly CSA boxes, wholesale produce, or planning a weekend visit to Willow Valley? Drop us a line below.</p>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="contact-grid">
+    <div class="contact-info-col">
+      <div class="contact-card">
+        <div class="icon">📍</div>
+        <div>
+          <h4>Headquarters Address</h4>
+          <p>MMR Complex, Chinna Thirupathi,<br>near Chinna Muniyappan Kovil,<br>Salem, Tamil Nadu 636008</p>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="icon">📞</div>
+        <div>
+          <h4>Phone & Office</h4>
+          <p>+91 98765 43210 / (541) 892-4102<br>Mon — Sat: 7:00 AM - 6:00 PM IST</p>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="icon">✉️</div>
+        <div>
+          <h4>Direct Emails</h4>
+          <p>csa@stackly.farm<br>wholesale@stackly.farm</p>
+        </div>
+      </div>
+      <div class="contact-card">
+        <div class="icon">🚜</div>
+        <div>
+          <h4>Farm Stand Hours</h4>
+          <p>Thursdays & Saturdays<br>8:00 AM — 2:00 PM</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form-col">
+      <h3 style="margin-bottom:20px; font-size:1.5rem; color:var(--forest);">Send Us a Message</h3>
+      <form novalidate onsubmit="event.preventDefault(); if(!validateContactForm(this)){ return false; } location.href='404.html';">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" placeholder="Sarah Jenkins" required oninput="this.value=this.value.replace(/[^A-Za-z \-']/g,''); clearContactError(this)">
+            <small class="field-error" style="display:none; color:#b3402a; font-size:0.78rem; margin-top:6px; font-weight:500;"></small>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="sarah@example.com" required oninput="clearContactError(this)">
+            <small class="field-error" style="display:none; color:#b3402a; font-size:0.78rem; margin-top:6px; font-weight:500;"></small>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Topic / Interest</label>
+            <div class="custom-select-box" id="topicSelectBox">
+              <select id="topicHiddenSelect" required style="display:none;" onchange="clearContactError(this)">
+                <option value="">Select Topic...</option>
+                <option value="csa">CSA Membership</option>
+                <option value="wholesale">Wholesale Grain / Produce</option>
+                <option value="tour">Farm Tour & Visit</option>
+                <option value="general">General Question</option>
+              </select>
+              
+              <button type="button" class="custom-select-trigger" id="topicSelectTrigger" onclick="toggleCustomDropdown()">
+                <span id="topicSelectText">Select Topic...</span>
+                <span class="custom-select-arrow">▾</span>
+              </button>
+              
+              <div class="custom-select-menu" id="topicSelectMenu">
+                <div class="custom-select-item placeholder" onclick="selectCustomOption('', 'Select Topic...')">Select Topic...</div>
+                <div class="custom-select-item" onclick="selectCustomOption('csa', 'CSA Membership')">CSA Membership</div>
+                <div class="custom-select-item" onclick="selectCustomOption('wholesale', 'Wholesale Grain / Produce')">Wholesale Grain / Produce</div>
+                <div class="custom-select-item" onclick="selectCustomOption('tour', 'Farm Tour & Visit')">Farm Tour & Visit</div>
+                <div class="custom-select-item" onclick="selectCustomOption('general', 'General Question')">General Question</div>
+              </div>
+            </div>
+            <small class="field-error" style="display:none; color:#b3402a; font-size:0.78rem; margin-top:6px; font-weight:500;"></small>
+          </div>
+          <div class="form-group">
+            <label>Phone (Optional)</label>
+            <input type="tel" placeholder="+91 98765 43210" oninput="this.value=this.value.replace(/[^0-9]/g,''); clearContactError(this)">
+            <small class="field-error" style="display:none; color:#b3402a; font-size:0.78rem; margin-top:6px; font-weight:500;"></small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="5" placeholder="How can we help you today?" required oninput="clearContactError(this)"></textarea>
+          <small class="field-error" style="display:none; color:#b3402a; font-size:0.78rem; margin-top:6px; font-weight:500;"></small>
+        </div>
+        <button type="submit" style="width:100%; padding:16px; background:var(--wheat); color:var(--forest-2); font-weight:600; border:none; border-radius:100px; cursor:pointer; font-size:1rem;">Send Message →</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- NEW SECTION 1: LIVE GATE & WEATHER STATUS BOARD -->
+<!-- ============================================ -->
+<section class="farm-status-section" id="farm-status">
+  <div class="wrap">
+    <div class="section-head reveal" style="text-align:center; max-width:680px; margin:0 auto;">
+      <div class="eyebrow" style="color:var(--wheat-2)"><span style="background:var(--wheat-2)"></span>Real-Time Gate Telemetry</div>
+      <h2 style="font-size:clamp(2.2rem,4.4vw,3.2rem); font-family:'Fraunces',serif; font-weight:600; color:var(--paper); margin-top:8px;">Willow Valley Gate Status</h2>
+      <p style="color:rgba(252,250,243,0.75); font-size:1.02rem; margin-top:12px;">Live operational updates for today's visitors, farm stand shoppers, and tour groups.</p>
+    </div>
+
+    <div class="status-grid reveal-stagger">
+      <!-- Status 1 -->
+      <div class="status-card">
+        <div class="status-header">
+          <div class="status-dot"></div>
+          <span class="status-tag">FARM STAND • OPEN TODAY</span>
+        </div>
+        <h3 class="status-title">Farm Stand Hours</h3>
+        <p class="status-detail">Open today 08:00 AM — 06:00 PM. Freshly picked spinach, raw honey, and sourdough loaves in stock.</p>
+      </div>
+
+      <!-- Status 2 -->
+      <div class="status-card">
+        <div class="status-header">
+          <div class="status-dot" style="background:#f1c40f; box-shadow:0 0 12px #f1c40f;"></div>
+          <span class="status-tag">FIELD WEATHER • 64°F</span>
+        </div>
+        <h3 class="status-title">Mild & Sunny Conditions</h3>
+        <p class="status-detail">Dry trails across Field #1 and pasture borders. Ideal weather for afternoon farm walks.</p>
+      </div>
+
+      <!-- Status 3 -->
+      <div class="status-card">
+        <div class="status-header">
+          <div class="status-dot"></div>
+          <span class="status-tag">GUIDED TOURS • DAILY 2PM</span>
+        </div>
+        <h3 class="status-title">Apiary & Soil Walk</h3>
+        <p class="status-detail">Guided walk leaves from the main solar barn at 2:00 PM. Free for CSA shareholders.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- NEW SECTION 2: INTERACTIVE ROUTE FINDER -->
+<!-- ============================================ -->
+<section class="route-finder-section" id="farm-directions">
+  <div class="wrap">
+    <div class="section-head reveal" style="text-align:center; max-width:680px; margin:0 auto;">
+      <div class="eyebrow"><span style="background:var(--clay)"></span>Plan Your Visit</div>
+      <h2 style="font-size:clamp(2.2rem,4.4vw,3.2rem); font-family:'Fraunces',serif; font-weight:600; color:var(--forest); margin-top:8px;">Interactive Transport Guide</h2>
+      <p style="color:var(--ink-soft); font-size:1.02rem; margin-top:12px;">Select your preferred mode of travel to see custom routes and parking instructions.</p>
+    </div>
+
+    <div class="route-grid reveal">
+      <div>
+        <div class="route-options">
+          <button type="button" class="route-btn active" onclick="location.href='404.html'">🚗 By Car (25 Mins)</button>
+          <button type="button" class="route-btn" onclick="location.href='404.html'">🚲 By Bike Trail (45 Mins)</button>
+          <button type="button" class="route-btn" onclick="location.href='404.html'">🚌 Eco-Shuttle (30 Mins)</button>
+        </div>
+
+        <div class="route-card" id="routeCard">
+          <h3 class="route-title" id="routeTitle">🚗 Driving Route to Salem Headquarters</h3>
+          <p class="route-desc" id="routeDesc">Head toward Chinna Thirupathi near Chinna Muniyappan Kovil, Salem. MMR Complex will be on your main road entrance.</p>
+          <div id="routeSteps">
+            <div class="route-step-item">📍 Address: MMR Complex, Chinna Thirupathi, Salem 636008</div>
+            <div class="route-step-item">🅿️ Free Parking & EV Charging at Headquarters Yard</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="border-radius:26px; overflow:hidden; border:2px solid var(--line); box-shadow:0 25px 50px rgba(31,59,44,0.12);">
+        <img src="images/farm_img_012.webp" alt="Willow Valley Farm Entrance" style="width:100%; height:380px; object-fit:cover; display:block;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- TRENDY MAP & GOOGLE DIRECTIONS SECTION -->
+<!-- ============================================ -->
+<div class="map-wrap-box" style="padding:100px 0; background:var(--forest-2); color:var(--paper); border-top:1px solid rgba(212,165,68,0.3);">
+  <div class="wrap">
+    <div style="text-align:center; max-width:680px; margin:0 auto 40px;">
+      <div class="eyebrow" style="color:var(--wheat-2); justify-content:center;"><span style="background:var(--wheat-2)"></span>Headquarters Location</div>
+      <h2 style="font-size:clamp(2.2rem,4.4vw,3.2rem); font-family:'Fraunces',serif; font-weight:600; color:var(--paper); margin-top:8px;">Interactive Headquarters Map</h2>
+      <p style="color:rgba(252,250,243,0.78); font-size:1.02rem; margin-top:12px;">MMR Complex, Chinna Thirupathi, near Chinna Muniyappan Kovil, Salem, Tamil Nadu 636008</p>
+    </div>
+
+    <!-- Ultra-Trendy Dark Glassmorphic Map Container -->
+    <div style="position:relative; border-radius:32px; overflow:hidden; border:2px solid rgba(212,165,68,0.4); box-shadow:0 30px 70px rgba(0,0,0,0.5); height:520px; background:#122318;">
+      <!-- Real Live Interactive Google Map Embed (Top-left cropped to remove Open in Maps button) -->
+      <iframe 
+        src="https://maps.google.com/maps?q=MMR+Complex,+Chinna+Thirupathi,+near+Chinna+Muniyappan+Kovil,+Salem,+Tamil+Nadu+636008&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+        width="106%" 
+        height="585" 
+        style="border:0; width:106%; height:585px; margin-top:-56px; margin-left:-3%; display:block; filter:contrast(1.05) saturate(1.1);" 
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Stackly Organic Farm Headquarters Salem Location Map">
+      </iframe>
+
+      <!-- Floating Glassmorphic Directions Spotlight Card -->
+      <div class="map-spot-card" style="position:absolute; bottom:24px; left:24px; max-width:440px; background:rgba(18,35,24,0.92); backdrop-filter:blur(16px); padding:24px; border-radius:24px; border:1px solid rgba(212,165,68,0.4); color:var(--paper); box-shadow:0 20px 50px rgba(0,0,0,0.5); z-index:10;">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:0.74rem; color:var(--wheat-2); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:6px;">📍 HEADQUARTERS ADDRESS</div>
+        <h4 style="font-family:'Fraunces',serif; font-size:1.35rem; color:var(--paper); margin-bottom:8px;">Stackly Farms HQ</h4>
+        <p style="font-size:0.88rem; color:rgba(252,250,243,0.85); line-height:1.5; margin-bottom:16px;">MMR Complex, Chinna Thirupathi, near Chinna Muniyappan Kovil, Salem, Tamil Nadu 636008</p>
+        <a href="404.html" style="display:inline-flex; align-items:center; gap:10px; padding:12px 24px; border-radius:100px; background:var(--wheat); color:var(--forest-2); font-weight:700; font-size:0.9rem; text-decoration:none; transition:transform 0.3s ease; box-shadow:0 8px 22px rgba(212,165,68,0.4);">
+          🚗 Open in Google Maps App ↗
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="faq-section">
+  <div class="wrap">
+    <div style="text-align:center; max-width:640px; margin:0 auto;">
+      <div class="eyebrow" style="justify-content:center;">Common Questions</div>
+      <h2>Frequently Asked Questions</h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q"><span>Do you deliver CSA boxes to home addresses?</span><span class="plus">+</span></button>
+        <div class="faq-a">Yes! We deliver weekly CSA boxes to home addresses within a 25-mile radius of Willow Valley every Thursday morning.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>Can we visit the farm during weekdays?</span><span class="plus">+</span></button>
+        <div class="faq-a">Our active farming operations run Monday through Friday. Scheduled farm tours are hosted every Saturday at 10:00 AM during our Farm Stand hours.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span>Are all your crops certified organic?</span><span class="plus">+</span></button>
+        <div class="faq-a">100% of our 90 acres are certified organic by USDA and Oregon Tilth. We never use synthetic pesticides, GMO seeds, or artificial fertilizers.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-bg"></div>
+  <div class="footer-overlay">
+    <div class="wrap">
+      <!-- Top 3 Contact Cards Row -->
+      <div class="footer-contact-row">
+        <div class="footer-contact-item">
+          <div class="footer-contact-icon">📞</div>
+          <div class="footer-contact-info">
+            <label>Phone No:</label>
+            <p>(541) 892-4102<br>Mon – Sat: 07.00 to 18.00</p>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <div class="footer-contact-icon">✉️</div>
+          <div class="footer-contact-info">
+            <label>Email Address:</label>
+            <p>csa@stackly.farm<br>hello@stackly.farm</p>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <div class="footer-contact-icon">📍</div>
+          <div class="footer-contact-info">
+            <label>Location:</label>
+            <p>1482 Willow Valley Road<br>Stackly, OR 97401</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main 4 Columns Grid -->
+      <div class="footer-main-grid">
+        <div class="footer-brand">
+          <a href="home.html" class="footer-logo-wrap" aria-label="Stackly Organic Farm" onclick="triggerLogoPreloader(event)">
+            <img src="logo_matching_light.webp" alt="Stackly Logo" class="footer-logo-pic">
+          </a>
+          <p>Ninety acres in the Willow Valley, farmed regeneratively since 1989. Grown slow, harvested honest.</p>
+          <div class="footer-socials">
+            <a href="404.html" class="footer-social-link" aria-label="Facebook" title="Facebook">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="404.html" class="footer-social-link" aria-label="X (Twitter)" title="X (Twitter)">
+              <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="404.html" class="footer-social-link" aria-label="Instagram" title="Instagram">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="404.html" class="footer-social-link" aria-label="YouTube" title="YouTube">
+              <svg width="17" height="17" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="home.html">Home</a>
+          <a href="shop.html">Shop</a>
+          <a href="journal.html">Journal</a>
+          <a href="blog.html">Blog</a>
+          <a href="about.html">About</a>
+          <a href="contact.html">Contact</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Categories</h4>
+          <a href="404.html">Organic Produce</a>
+          <a href="404.html">Pastured Hen Eggs</a>
+          <a href="404.html">Heritage Grains</a>
+          <a href="404.html">Weekly CSA Share</a>
+          <a href="404.html">Cold-Pressed Oils</a>
+          <a href="404.html">Cut Flower Bundles</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Subscribe Newsletter</h4>
+          <p class="footer-newsletter-text">Enter your email and get recent harvest news & seasonal offers updates.</p>
+          <form class="footer-newsletter-form" onsubmit="event.preventDefault(); var _e=this.querySelector('input[type=email]'); if(_e && !/\.com$/i.test(_e.value.trim())){ return false; } location.href='404.html';">
+            <input type="email" class="footer-newsletter-input" placeholder="Enter your email..." required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com" title="Email must end in .com (e.g. name@domain.com)">
+            <button type="submit" class="footer-newsletter-btn" aria-label="Subscribe">✈</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom-bar">
+        <div>Copyright © 2026 <strong>STACKLY</strong>. All Rights Reserved.</div>
+        <div class="footer-bottom-links">
+          <a href="404.html">Privacy & Cookie Settings</a>
+          <a href="#top" class="footer-to-top-btn" title="Back to Top">↑</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+const siteHeader = document.getElementById('siteHeader');
+window.addEventListener('scroll', ()=>{
+  if(window.scrollY > 40){ siteHeader.classList.add('scrolled'); }
+  else { siteHeader.classList.remove('scrolled'); }
+});
+
+const mobileDrawer = document.getElementById('mobileDrawer');
+const menuToggleBtn = document.getElementById('menuToggleBtn');
+const mobileDrawerClose = document.getElementById('mobileDrawerClose');
+const loginModal = document.getElementById('loginModal');
+const loginNavBtn = document.getElementById('loginNavBtn');
+const loginModalClose = document.getElementById('loginModalClose');
+
+if(menuToggleBtn && mobileDrawer){ menuToggleBtn.addEventListener('click', ()=>{ mobileDrawer.classList.add('open'); document.body.style.overflow='hidden'; document.documentElement.style.overflow='hidden'; }); }
+if(mobileDrawerClose && mobileDrawer){ mobileDrawerClose.addEventListener('click', ()=>{ mobileDrawer.classList.remove('open'); document.body.style.overflow=''; document.documentElement.style.overflow=''; }); }
+function closeMobileDrawer(){ if(mobileDrawer){ mobileDrawer.classList.remove('open'); document.body.style.overflow=''; document.documentElement.style.overflow=''; } }
+
+function openLoginModal(){ if(loginModal) loginModal.classList.add('open'); }
+function closeLoginModal(){ if(loginModal) loginModal.classList.remove('open'); }
+if(loginModalClose){ loginModalClose.addEventListener('click', closeLoginModal); }
+if(loginModal){ loginModal.addEventListener('click', (e)=>{ if(e.target===loginModal) closeLoginModal(); }); }
+document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLoginModal(); });
+
+// FAQ toggle
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-q').addEventListener('click', ()=>{
+    const isOpen = item.classList.contains('open');
+    item.parentElement.querySelectorAll('.faq-item.open').forEach(other=>other.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
+  });
+});
+// Interactive Route Finder JS
+const routeData = {
+  car: {
+    title: "🚗 Driving Route via Highway 12",
+    desc: "Take Exit 42 toward Willow Valley Rd. Drive 4 miles past the historic stone bridge. Farm gates will be on your right.",
+    steps: ["📍 GPS: 44.2312° N, 76.4810° W", "🅿️ Free Solar EV Charging & Visitor Parking at Barn #2"]
+  },
+  bike: {
+    title: "🚲 Willow Valley Rail-Trail (Bike Route)",
+    desc: "Follow the paved greenway path along Willow Creek for 8.5 miles directly to the farm stand bike rack.",
+    steps: ["🚴 Paved & Flat Grade (Family Friendly)", "🚲 Covered Bike Racks & Spring Water Hydration Station"]
+  },
+  shuttle: {
+    title: "🚌 Saturday Eco-Shuttle Bus",
+    desc: "Departs Downtown Central Station every Saturday on the hour from 8:00 AM to 1:00 PM.",
+    steps: ["🎟️ Free for CSA Members / $2.00 Single Fare", "⚡ 100% Electric Battery Bus"]
+  }
+};
+
+function setRoute(type, btn){
+  document.querySelectorAll('.route-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+
+  const r = routeData[type];
+  if(!r) return;
+
+  document.getElementById('routeTitle').innerText = r.title;
+  document.getElementById('routeDesc').innerText = r.desc;
+
+  const stepsDiv = document.getElementById('routeSteps');
+  stepsDiv.innerHTML = r.steps.map(s => `<div class="route-step-item">${s}</div>`).join('');
+}
+
+function clearContactError(input){
+  if(!input) return;
+  const g = input.closest ? input.closest('.form-group') : null;
+  if(!g) return;
+  const e = g.querySelector('.field-error');
+  if(e){ e.style.display = 'none'; e.textContent = ''; }
+}
+
+function validateContactForm(form){
+  const rules = [
+    { sel: 'input[type="text"]', test: v => v.trim() !== '' && /^[A-Za-z \-']+$/.test(v), msg: 'Name must be letters only.' },
+    { sel: 'input[type="email"]', test: v => /\.com$/i.test(v.trim()), msg: 'Email must end in .com (e.g. name@domain.com).' },
+    { sel: 'input[type="tel"]', test: v => v === '' || /^[0-9]+$/.test(v), msg: 'Phone must contain digits only.' },
+    { sel: 'select', test: v => v !== '', msg: 'Please choose a topic.' },
+    { sel: 'textarea', test: v => v.trim() !== '', msg: 'Please enter a message.' }
+  ];
+  let first = null;
+  rules.forEach(r => {
+    const el = form.querySelector(r.sel);
+    if(!el) return;
+    const g = el.closest('.form-group');
+    const e = g ? g.querySelector('.field-error') : null;
+    const ok = r.test(el.value || '');
+    if(!ok){
+      if(e){ e.style.display = 'block'; e.textContent = r.msg; }
+      if(!first) first = el;
+    } else if(e){ e.style.display = 'none'; e.textContent = ''; }
+  });
+  if(first){ first.focus(); return false; }
+  return true;
+}
+
+// Custom In-DOM Dropdown Menu Handlers
+function toggleCustomDropdown() {
+  const box = document.getElementById('topicSelectBox');
+  if (box) box.classList.toggle('open');
+}
+
+function selectCustomOption(val, text) {
+  const select = document.getElementById('topicHiddenSelect');
+  const textEl = document.getElementById('topicSelectText');
+  const box = document.getElementById('topicSelectBox');
+
+  if (select) {
+    select.value = val;
+    clearContactError(select);
+  }
+  if (textEl) textEl.textContent = text;
+  if (box) box.classList.remove('open');
+
+  document.querySelectorAll('.custom-select-item').forEach(item => {
+    if (item.textContent.trim() === text.trim()) {
+      item.classList.add('selected');
+    } else {
+      item.classList.remove('selected');
+    }
+  });
+}
+
+document.addEventListener('click', function(e) {
+  const box = document.getElementById('topicSelectBox');
+  if (box && !box.contains(e.target)) {
+    box.classList.remove('open');
+  }
+});
+</script>
+
+<!-- GSAP & ScrollTrigger CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+(function initGSAPAnimations() {
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  
+  gsap.registerPlugin(ScrollTrigger);
+
+  // 1. Header Scroll Morph
+  const siteHeader = document.getElementById('siteHeader');
+  if (siteHeader) {
+    ScrollTrigger.create({
+      start: 'top -40',
+      onUpdate: (self) => {
+        if (self.direction === 1 && self.scroll() > 50) {
+          siteHeader.classList.add('scrolled');
+        } else if (self.scroll() <= 50) {
+          siteHeader.classList.remove('scrolled');
+        }
+      }
+    });
+  }
+
+  // 2. Section Headings & Titles Reveal Animation
+  const headings = document.querySelectorAll('.eyebrow, section h2, .section-head h2, .benefits-head h2, .agri-work-head h2, .harvest-matrix-head h2, .moving-strip-head h2, .soil-lab-grid h2, .farm-kitchen-section h2, .telemetry-title, .seed-vault-section h2, .green-energy-section h2, .calc-section h2, .apiary-section h2, .farm-map-section h2, .about h2, .seasons h2');
+  headings.forEach(h => {
+    gsap.fromTo(h, 
+      { y: 40, opacity: 0, filter: 'blur(8px)' },
+      {
+        y: 0, opacity: 1, filter: 'blur(0px)',
+        duration: 1.1, ease: 'power3.out',
+        scrollTrigger: {
+          trigger: h,
+          start: 'top 88%',
+          toggleActions: 'play none none reverse'
+        }
+      }
+    );
+  });
+
+  // 3. Staggered Grid Card Animations
+  const gridContainers = [
+    { parent: '.benefits-grid', items: '.bento-card' },
+    { parent: '.agri-work-grid', items: '.agri-card' },
+    { parent: '.season-content-grid', items: '.crop-card-item' },
+    { parent: '.kitchen-recipe-grid', items: '.recipe-card' },
+    { parent: '.telemetry-grid', items: '.telemetry-card' },
+    { parent: '.seed-vault-grid', items: '.seed-card' },
+    { parent: '.energy-bento', items: '.energy-box' },
+    { parent: '.calc-results-grid', items: '.calc-res-card' },
+    { parent: '.honeycomb-wrap', items: '.honey-card' },
+    { parent: '.shop-grid', items: '.shop-card' },
+    { parent: '.gallery-masonry', items: '.journal-card' },
+    { parent: '.blog-grid', items: '.blog-card' },
+    { parent: '.values-grid', items: '.value-card' },
+    { parent: '.contact-grid', items: '.contact-card' },
+    { parent: '.footer-contact-row', items: '.footer-contact-item' }
+  ];
+
+  gridContainers.forEach(group => {
+    const parentEl = document.querySelector(group.parent);
+    if (!parentEl) return;
+    const items = parentEl.querySelectorAll(group.items);
+    if (!items.length) return;
+
+    gsap.fromTo(items,
+      { y: 50, opacity: 0, scale: 0.94 },
+      {
+        y: 0, opacity: 1, scale: 1,
+        duration: 0.9, ease: 'power3.out',
+        stagger: 0.12,
+        scrollTrigger: {
+          trigger: parentEl,
+          start: 'top 85%',
+          toggleActions: 'play none none reverse'
+        }
+      }
+    );
+  });
+
+  // 4. Parallax Image Effects on Scroll
+  const parallaxImgs = document.querySelectorAll('.bento-card img, .crop-img-wrap img, .soil-main-img-box img, .recipe-img-box img, .seed-img-wrap img, .about-photo img, .map-container img');
+  parallaxImgs.forEach(img => {
+    gsap.to(img, {
+      yPercent: 12,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: img.parentElement || img,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: 1.2
+      }
+    });
+  });
+
+  // 5. Magnetic Buttons Effect
+  if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const magneticBtns = document.querySelectorAll('.btn-primary, .btn-social, .season-tab-btn, .shop-add, .cart-floating-btn');
+    magneticBtns.forEach(btn => {
+      const xTo = gsap.quickTo(btn, 'x', { duration: 0.4, ease: 'power3.out' });
+      const yTo = gsap.quickTo(btn, 'y', { duration: 0.4, ease: 'power3.out' });
+
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const relX = e.clientX - (rect.left + rect.width / 2);
+        const relY = e.clientY - (rect.top + rect.height / 2);
+        xTo(relX * 0.28);
+        yTo(relY * 0.28);
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        xTo(0);
+        yTo(0);
+      });
+    });
+  }
+
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+})();
+</script>
+
+<!-- Unique Stackly Agriculture Preloader Overlay -->
+<div class="stackly-preloader" id="stacklyPreloader" aria-hidden="true">
+  <div class="preloader-content">
+    <div class="preloader-agri-symbol">
+      <div class="agri-ring"></div>
+      <div class="agri-ring-outer"></div>
+      <span class="agri-icon">🌾</span>
+    </div>
+    
+    <div class="preloader-logo-wrap">
+      <img src="logo_matching_light.webp" alt="Stackly Logo" class="preloader-logo-img">
+    </div>
+    
+    <div class="preloader-track">
+      <div class="preloader-fill" id="preloaderFill"></div>
+    </div>
+    
+    <div class="preloader-subtext">STACKLY ORGANIC FARM · HARVESTING NATURE</div>
+  </div>
+</div>
+
+<script>
+function triggerLogoPreloader(e) {
+  if (e) e.preventDefault();
+  const preloader = document.getElementById('stacklyPreloader');
+  const fill = document.getElementById('preloaderFill');
+  const targetUrl = (e && e.currentTarget && e.currentTarget.getAttribute('href')) || 'home.html';
+
+  if (preloader && fill) {
+    fill.style.width = '0%';
+    preloader.classList.add('active');
+
+    setTimeout(() => { fill.style.width = '100%'; }, 30);
+
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 650);
+  } else {
+    window.location.href = targetUrl;
+  }
+}
+</script>
+
+<script>
+/* remember originating page + scroll before navigating to 404 (Back to Previous fallback) */
+document.addEventListener('click', function(e){
+  var el = e.target && e.target.closest ? e.target.closest('a[href],button') : null;
+  if(!el) return;
+  var href = el.getAttribute('href') || el.getAttribute('onclick') || '';
+  if(href.indexOf('404.html') !== -1){
+    try{
+      sessionStorage.setItem('stacklyBackTo', window.location.href);
+      sessionStorage.setItem('stacklyBackScroll', String(window.scrollY));
+    }catch(err){}
+  }
+}, true);
+/* restore scroll position when returning from 404 */
+(function(){
+  function restoreBackScroll(){
+    try{
+      var back = sessionStorage.getItem('stacklyBackTo');
+      var scroll = sessionStorage.getItem('stacklyBackScroll');
+      if(back && back === window.location.href && window.location.href.indexOf('404.html') === -1 && scroll !== null){
+        sessionStorage.removeItem('stacklyBackTo');
+        sessionStorage.removeItem('stacklyBackScroll');
+        var y = parseInt(scroll, 10);
+        if(!isNaN(y) && y > 0){
+          window.scrollTo(0, y);
+          setTimeout(function(){ window.scrollTo(0, y); }, 300);
+        }
+      }
+    }catch(err){}
+  }
+  if(document.readyState === 'complete'){ restoreBackScroll(); }
+  else { window.addEventListener('load', restoreBackScroll); }
+})();
+</script></body>
+</html>

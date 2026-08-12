@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="refresh" content="0; url=home.html">
+<title>Stackly — Grown Slow, Harvested Honest</title>
+<script>window.location.href = "home.html";</script>
+<style>
+
+/* ---------- Unique Stackly Agriculture Preloader Overlay ---------- */
+.stackly-preloader {
+  position: fixed; inset: 0; z-index: 999999;
+  background: rgba(18, 35, 24, 0.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease;
+  pointer-events: none;
+}
+
+.stackly-preloader.active {
+  opacity: 1; visibility: visible; pointer-events: auto;
+}
+
+.preloader-content {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 40px 32px; border-radius: 28px; background: rgba(31, 59, 44, 0.5);
+  border: 1px solid rgba(212, 165, 68, 0.4); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+  max-width: 380px; width: 88%; transform: scale(0.92); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stackly-preloader.active .preloader-content {
+  transform: scale(1);
+}
+
+.preloader-agri-symbol {
+  position: relative; width: 80px; height: 80px; display: flex; align-items: center;
+  justify-content: center; margin-bottom: 18px;
+}
+
+.agri-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px dashed rgba(212, 165, 68, 0.6);
+  border-top-color: #E9C876; border-right-color: #D4A544;
+  animation: agriRingSpin 1.2s linear infinite;
+}
+
+.agri-ring-outer {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px solid rgba(233, 200, 118, 0.25);
+  animation: agriPulseGlow 1.5s ease-in-out infinite alternate;
+}
+
+.agri-icon {
+  font-size: 2.5rem; filter: drop-shadow(0 0 14px rgba(212, 165, 68, 0.9));
+  animation: agriBounce 0.6s ease-in-out infinite alternate;
+}
+
+.preloader-logo-wrap {
+  margin-bottom: 22px;
+}
+
+.preloader-logo-img {
+  height: 44px; width: auto; object-fit: contain;
+  filter: drop-shadow(0 4px 18px rgba(212, 165, 68, 0.5));
+  animation: logoGlow 1.2s ease-in-out infinite alternate;
+}
+
+.preloader-track {
+  width: 100%; height: 5px; background: rgba(252, 250, 243, 0.14);
+  border-radius: 100px; overflow: hidden; margin-bottom: 16px; position: relative;
+}
+
+.preloader-fill {
+  height: 100%; width: 0%; border-radius: 100px;
+  background: linear-gradient(90deg, #D4A544, #FFF8DB, #E9C876);
+  box-shadow: 0 0 14px rgba(233, 200, 118, 0.95);
+  transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.preloader-subtext {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+  color: rgba(252, 250, 243, 0.78); letter-spacing: 0.16em; text-transform: uppercase;
+}
+
+@keyframes agriRingSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes agriPulseGlow { 0% { transform: scale(0.95); opacity: 0.4; } 100% { transform: scale(1.08); opacity: 0.9; } }
+@keyframes agriBounce { 0% { transform: scale(0.92) translateY(0); } 100% { transform: scale(1.1) translateY(-5px); } }
+@keyframes logoGlow { 0% { opacity: 0.85; filter: drop-shadow(0 2px 8px rgba(212, 165, 68, 0.3)); } 100% { opacity: 1; filter: drop-shadow(0 6px 20px rgba(233, 200, 118, 0.9)); } }
+
+</style>
+</head>
+<body>
+<p>Redirecting to <a href="home.html">Home</a>...</p>
+
+<!-- Unique Stackly Agriculture Preloader Overlay -->
+<div class="stackly-preloader" id="stacklyPreloader" aria-hidden="true">
+  <div class="preloader-content">
+    <div class="preloader-agri-symbol">
+      <div class="agri-ring"></div>
+      <div class="agri-ring-outer"></div>
+      <span class="agri-icon">🌾</span>
+    </div>
+    
+    <div class="preloader-logo-wrap">
+      <img src="logo_matching_light.webp" alt="Stackly Logo" class="preloader-logo-img">
+    </div>
+    
+    <div class="preloader-track">
+      <div class="preloader-fill" id="preloaderFill"></div>
+    </div>
+    
+    <div class="preloader-subtext">STACKLY ORGANIC FARM · HARVESTING NATURE</div>
+  </div>
+</div>
+
+<script>
+function triggerLogoPreloader(e) {
+  if (e) e.preventDefault();
+  const preloader = document.getElementById('stacklyPreloader');
+  const fill = document.getElementById('preloaderFill');
+  const targetUrl = (e && e.currentTarget && e.currentTarget.getAttribute('href')) || 'home.html';
+
+  if (preloader && fill) {
+    fill.style.width = '0%';
+    preloader.classList.add('active');
+
+    setTimeout(() => { fill.style.width = '100%'; }, 30);
+
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 650);
+  } else {
+    window.location.href = targetUrl;
+  }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — Stackly Organic Farm</title>
+  <meta name="description" content="Create your Stackly Organic Farm member account. Join the CSA, get fresh harvest boxes, and manage farm orders.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --forest: #1F3B2C;
+      --forest-2: #122318;
+      --wheat: #D4A544;
+      --wheat-2: #E9C876;
+      --clay: #A6613A;
+      --cream: #F6F1E4;
+      --paper: #FCFAF3;
+      --sage: #7C9473;
+      --ink: #1B211E;
+      --ink-soft: #4A5550;
+      --line: rgba(31,59,44,0.12);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; font-family:'Inter', sans-serif; background:var(--forest-2); color:var(--paper); }
+    body { min-height:100vh; display:flex; flex-direction:column; overflow-x:hidden; position:relative; }
+
+    .signup-section {
+      min-height:100vh; padding:20px 20px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      position:relative; background:url('images/farm_img_015.webp') center center / cover no-repeat;
+    }
+    .signup-bg-overlay {
+      position:absolute; inset:0; background:radial-gradient(circle at 50% 30%, rgba(18,35,24,0.82) 0%, rgba(18,35,24,0.96) 100%);
+      z-index:1;
+    }
+    .signup-logo { position:relative; z-index:2; display:block; text-decoration:none; }
+    .signup-logo img { height:56px; width:auto; display:block; filter:drop-shadow(0 6px 18px rgba(0,0,0,0.5)); }
+    .signup-container .signup-logo { align-self:flex-start; margin-bottom:20px; }
+    .signup-container .signup-logo img { height:46px; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.45)); }
+
+    .signup-container {
+      position:relative; z-index:2; width:100%; max-width:560px; border-radius:32px; overflow:hidden;
+      border:1px solid rgba(212,165,68,0.25); box-shadow:0 35px 80px rgba(0,0,0,0.55);
+      backdrop-filter:blur(16px); background:rgba(18,35,24,0.75); padding:32px 36px;
+      display:flex; flex-direction:column;
+    }
+    @media (max-width:640px){ .signup-container { max-width:100%; padding:26px 22px; } }
+
+    .signup-header { text-align:center; margin-bottom:22px; }
+    .signup-badge {
+      display:inline-flex; align-items:center; gap:8px; background:rgba(212,165,68,0.15); border:1px solid var(--wheat);
+      color:var(--wheat-2); padding:6px 14px; border-radius:100px; font-family:'JetBrains Mono', monospace;
+      font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:18px;
+    }
+    .signup-header h2 { font-family:'Fraunces', serif; font-size:2rem; font-weight:600; color:var(--paper); margin-bottom:8px; }
+    .signup-header p { font-size:0.9rem; color:rgba(252,250,243,0.7); line-height:1.5; }
+
+    /* Role Selector Tabs */
+    .role-tabs-wrapper { margin-bottom:18px; }
+    .role-tabs-label { font-family:'JetBrains Mono', monospace; font-size:0.72rem; text-transform:uppercase; color:var(--wheat-2); letter-spacing:0.1em; margin-bottom:12px; display:block; }
+    .role-tabs {
+      display:grid; grid-template-columns:1fr 1fr; background:rgba(0,0,0,0.35); padding:6px; border-radius:18px;
+      border:1px solid rgba(252,250,243,0.12); gap:6px;
+    }
+    .role-tab-btn {
+      background:none; border:none; padding:9px 12px; border-radius:14px; font-size:0.88rem; font-weight:600;
+      color:rgba(252,250,243,0.7); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+      transition:all 0.3s ease; font-family:'Inter', sans-serif;
+    }
+    .role-tab-btn.active {
+      background:var(--forest); color:var(--paper); box-shadow:0 6px 20px rgba(0,0,0,0.3); border:1px solid rgba(212,165,68,0.4);
+    }
+    .role-tab-btn.active.manager-mode {
+      background:var(--clay); border-color:#D48644;
+    }
+    .role-tab-btn .badge-icon { font-size:1.1rem; }
+
+    .form-group { margin-bottom:14px; }
+    .form-group label { display:block; font-family:'JetBrains Mono', monospace; font-size:0.72rem; text-transform:uppercase; color:var(--wheat-2); letter-spacing:0.08em; margin-bottom:7px; }
+    .input-wrapper { position:relative; }
+    .input-icon { position:absolute; left:15px; top:50%; transform:translateY(-50%); font-size:1rem; opacity:0.8; }
+    .form-input {
+      width:100%; padding:12px 14px 12px 44px; border-radius:14px; border:1px solid rgba(252,250,243,0.16);
+      background:rgba(252,250,243,0.06); color:var(--paper); font-size:0.95rem; outline:none; transition:border 0.3s ease;
+    }
+    .form-input:focus { border-color:var(--wheat); background:rgba(252,250,243,0.09); }
+    .form-input::placeholder { color:rgba(252,250,243,0.35); }
+
+    .checkbox-row { display:flex; align-items:center; gap:10px; font-size:0.82rem; color:rgba(252,250,243,0.7); margin:2px 0 16px; }
+    .checkbox-row input { accent-color:var(--wheat); width:16px; height:16px; }
+
+    .btn-submit-signup {
+      width:100%; padding:13px 18px; border-radius:100px; border:none; cursor:pointer;
+      background:linear-gradient(120deg, var(--wheat), var(--wheat-2)); color:var(--forest-2);
+      font-weight:700; font-size:0.95rem; transition:all 0.3s ease; box-shadow:0 8px 20px rgba(212,165,68,0.35);
+    }
+    .btn-submit-signup:hover { transform:translateY(-2px); box-shadow:0 12px 26px rgba(212,165,68,0.45); }
+    .btn-submit-signup.manager-theme { background:linear-gradient(120deg, var(--clay), #D48644); box-shadow:0 8px 20px rgba(166,97,58,0.4); }
+    .btn-submit-signup.manager-theme:hover { box-shadow:0 12px 26px rgba(166,97,58,0.5); }
+
+    .social-login-section { margin-top:16px; padding-top:14px; border-top:1px solid rgba(252,250,243,0.1); }
+    .social-divider { display:flex; align-items:center; gap:14px; font-size:0.72rem; font-family:'JetBrains Mono', monospace; color:rgba(252,250,243,0.5); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px; }
+    .social-divider::before, .social-divider::after { content:""; flex-grow:1; height:1px; background:rgba(252,250,243,0.1); }
+    .social-icons-row { display:flex; justify-content:center; gap:12px; }
+    .social-icon-btn {
+      width:46px; height:46px; border-radius:14px; background:rgba(252,250,243,0.06); border:1px solid rgba(252,250,243,0.16);
+      color:var(--paper); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.3s ease;
+    }
+    .social-icon-btn:hover { background:rgba(212,165,68,0.18); border-color:var(--wheat); color:var(--wheat-2); transform:translateY(-3px); }
+
+    .login-cta { margin-top:14px; text-align:center; }
+    .login-cta p { font-size:0.85rem; color:rgba(252,250,243,0.6); margin-bottom:4px; }
+    .login-cta a { color:var(--wheat-2); font-weight:600; text-decoration:none; }
+    .login-cta a:hover { text-decoration:underline; }
+
+    /* Back Button (top-right of card) */
+    .back-btn {
+      position:absolute; top:16px; right:18px; z-index:5; width:38px; height:38px;
+      display:flex; align-items:center; justify-content:center; border-radius:50%;
+      background:rgba(252,250,243,0.1); border:1px solid rgba(252,250,243,0.25);
+      color:var(--paper); font-size:1.15rem; text-decoration:none; transition:all 0.3s ease;
+    }
+    .back-btn:hover { background:var(--wheat); color:var(--forest-2); border-color:var(--wheat); transform:translateY(-2px); }
+
+    .toast-alert {
+      position:fixed; top:24px; right:24px; z-index:3000; background:var(--paper); color:var(--forest-2);
+      padding:16px 24px; border-radius:18px; box-shadow:0 20px 40px rgba(0,0,0,0.4); border-left:6px solid #5B8C4A;
+      display:flex; align-items:center; gap:14px; transform:translateY(-100px); opacity:0; transition:all 0.4s cubic-bezier(0.2,0.8,0.2,1);
+    }
+    .toast-alert.show { transform:translateY(0); opacity:1; }
+    .toast-icon { width:32px; height:32px; border-radius:50%; background:#5B8C4A; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+    .toast-text h6 { font-size:0.95rem; font-weight:700; color:var(--forest-2); margin-bottom:2px; }
+    .toast-text p { font-size:0.82rem; color:var(--ink-soft); }
+  </style>
+<style>
+
+/* ---------- Unique Stackly Agriculture Preloader Overlay ---------- */
+.stackly-preloader {
+  position: fixed; inset: 0; z-index: 999999;
+  background: rgba(18, 35, 24, 0.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease;
+  pointer-events: none;
+}
+
+.stackly-preloader.active {
+  opacity: 1; visibility: visible; pointer-events: auto;
+}
+
+.preloader-content {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 40px 32px; border-radius: 28px; background: rgba(31, 59, 44, 0.5);
+  border: 1px solid rgba(212, 165, 68, 0.4); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+  max-width: 380px; width: 88%; transform: scale(0.92); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stackly-preloader.active .preloader-content {
+  transform: scale(1);
+}
+
+.preloader-agri-symbol {
+  position: relative; width: 80px; height: 80px; display: flex; align-items: center;
+  justify-content: center; margin-bottom: 18px;
+}
+
+.agri-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px dashed rgba(212, 165, 68, 0.6);
+  border-top-color: #E9C876; border-right-color: #D4A544;
+  animation: agriRingSpin 1.2s linear infinite;
+}
+
+.agri-ring-outer {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px solid rgba(233, 200, 118, 0.25);
+  animation: agriPulseGlow 1.5s ease-in-out infinite alternate;
+}
+
+.agri-icon {
+  font-size: 2.5rem; filter: drop-shadow(0 0 14px rgba(212, 165, 68, 0.9));
+  animation: agriBounce 0.6s ease-in-out infinite alternate;
+}
+
+.preloader-logo-wrap {
+  margin-bottom: 22px;
+}
+
+.preloader-logo-img {
+  height: 44px; width: auto; object-fit: contain;
+  filter: drop-shadow(0 4px 18px rgba(212, 165, 68, 0.5));
+  animation: logoGlow 1.2s ease-in-out infinite alternate;
+}
+
+.preloader-track {
+  width: 100%; height: 5px; background: rgba(252, 250, 243, 0.14);
+  border-radius: 100px; overflow: hidden; margin-bottom: 16px; position: relative;
+}
+
+.preloader-fill {
+  height: 100%; width: 0%; border-radius: 100px;
+  background: linear-gradient(90deg, #D4A544, #FFF8DB, #E9C876);
+  box-shadow: 0 0 14px rgba(233, 200, 118, 0.95);
+  transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.preloader-subtext {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+  color: rgba(252, 250, 243, 0.78); letter-spacing: 0.16em; text-transform: uppercase;
+}
+
+@keyframes agriRingSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes agriPulseGlow { 0% { transform: scale(0.95); opacity: 0.4; } 100% { transform: scale(1.08); opacity: 0.9; } }
+@keyframes agriBounce { 0% { transform: scale(0.92) translateY(0); } 100% { transform: scale(1.1) translateY(-5px); } }
+@keyframes logoGlow { 0% { opacity: 0.85; filter: drop-shadow(0 2px 8px rgba(212, 165, 68, 0.3)); } 100% { opacity: 1; filter: drop-shadow(0 6px 20px rgba(233, 200, 118, 0.9)); } }
+
+</style>
+</head>
+<body>
+
+  <!-- Signup Section -->
+  <main class="signup-section">
+    <div class="signup-bg-overlay"></div>
+
+    <div class="signup-container">
+      <a href="home.html" class="back-btn" title="Back to Home" aria-label="Back to Home" onclick="triggerLogoPreloader(event)">←</a>
+
+      <a href="home.html" class="signup-logo" aria-label="Stackly Organic Farm" onclick="triggerLogoPreloader(event)">
+        <img src="logo_matching_light.webp" alt="Stackly Logo">
+      </a>
+
+      <div class="signup-header">
+        <div class="signup-badge" id="signupBadge">🌾 Stackly Farm Family</div>
+        <h2 id="signupTitle">Create Your Account</h2>
+        <p id="signupSub">Join the CSA family and get fresh, regeneratively grown harvest boxes delivered weekly.</p>
+      </div>
+
+      <!-- Role Selector -->
+      <div class="role-tabs-wrapper">
+        <span class="role-tabs-label">Select Account Role:</span>
+        <div class="role-tabs">
+          <button class="role-tab-btn active" id="tabCustomer" onclick="switchRole('customer')">
+            <span class="badge-icon">🌾</span> Customer / Member
+          </button>
+          <button class="role-tab-btn" id="tabManager" onclick="switchRole('manager')">
+            <span class="badge-icon">🚜</span> Farm Manager
+          </button>
+        </div>
+      </div>
+
+      <form id="signupForm" onsubmit="handleSignupSubmit(event)">
+        <div class="form-group">
+          <label for="signupName">Full Name</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="signupName" class="form-input" placeholder="Your full name" required oninput="this.value=this.value.replace(/[^A-Za-z \-']/g,'')" pattern="[A-Za-z \-']+">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="signupEmail">Email Address</label>
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <input type="email" id="signupEmail" class="form-input" placeholder="name@example.com" required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com" title="Email must end in .com (e.g. name@domain.com)">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="signupPassword">Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="signupPassword" class="form-input" placeholder="Create a strong password" minlength="8" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="signupConfirmPassword">Confirm Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="signupConfirmPassword" class="form-input" placeholder="Re-enter your password" minlength="8" required>
+          </div>
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="signupAgree" required>
+          <span>I agree to the <a href="404.html" style="color:var(--wheat-2);">Terms</a> & <a href="404.html" style="color:var(--wheat-2);">Privacy Policy</a></span>
+        </label>
+
+        <button type="submit" class="btn-submit-signup" id="btnSubmitSignup"><span id="submitBtnText">Create Account as Customer →</span></button>
+      </form>
+
+      <!-- Social Signup -->
+      <div class="social-login-section">
+        <div class="social-divider">or sign up with</div>
+        <div class="social-icons-row">
+          <button class="social-icon-btn" type="button" onclick="location.href='404.html'" aria-label="Sign up with Google" title="Google">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M21.35 11.1H12v3.9h5.4c-.44 2.55-2.63 4.1-5.4 4.1-3.28 0-5.95-2.67-5.95-5.95S8.72 7.2 12 7.2c1.4 0 2.68.49 3.67 1.3l2.88-2.88C16.9 4.2 14.6 3.2 12 3.2 7.03 3.2 3 7.23 3 12.2s4.03 9 9 9c5.02 0 8.75-3.68 8.75-8.95 0-.57-.05-1.1-.4-2.15z"/></svg>
+          </button>
+          <button class="social-icon-btn" type="button" onclick="location.href='404.html'" aria-label="Sign up with Apple" title="Apple">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.86-3.08.38-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.38C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          </button>
+          <button class="social-icon-btn" type="button" onclick="location.href='404.html'" aria-label="Sign up with Facebook" title="Facebook">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.8-4.7 4.55-4.7 1.32 0 2.7.24 2.7.24v2.97h-1.52c-1.5 0-1.96.93-1.96 1.89v2.26h3.34l-.53 3.49h-2.81V24C19.61 23.09 24 18.1 24 12.07z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="login-cta">
+        <p>Already have an account?</p>
+        <a href="login.html">Sign In →</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast-alert" id="toastAlert">
+    <div class="toast-icon">✓</div>
+    <div class="toast-text">
+      <h6 id="toastTitle">Account Created!</h6>
+      <p id="toastBody">Welcome to the Stackly family!</p>
+    </div>
+  </div>
+
+  <script>
+    let currentRole = 'customer';
+
+    function switchRole(role) {
+      currentRole = role;
+      const tabCustomer = document.getElementById('tabCustomer');
+      const tabManager = document.getElementById('tabManager');
+      const badge = document.getElementById('signupBadge');
+      const title = document.getElementById('signupTitle');
+      const sub = document.getElementById('signupSub');
+      const submitBtnText = document.getElementById('submitBtnText');
+      const btnSubmit = document.getElementById('btnSubmitSignup');
+
+      if (role === 'customer') {
+        tabCustomer.classList.add('active');
+        tabCustomer.classList.remove('manager-mode');
+        tabManager.classList.remove('active', 'manager-mode');
+        btnSubmit.classList.remove('manager-theme');
+        badge.textContent = '🌾 Stackly Farm Family';
+        title.textContent = 'Create Your Account';
+        sub.textContent = 'Join the CSA family and get fresh, regeneratively grown harvest boxes delivered weekly.';
+        submitBtnText.textContent = 'Create Account as Customer →';
+      } else {
+        tabManager.classList.add('active', 'manager-mode');
+        tabCustomer.classList.remove('active');
+        btnSubmit.classList.add('manager-theme');
+        badge.textContent = '🚜 Farm Manager Portal';
+        title.textContent = 'Create Manager Account';
+        sub.textContent = 'Register for farm management access — crop yields, soil analytics & inventory control.';
+        submitBtnText.textContent = 'Create Manager Account →';
+      }
+    }
+
+    function handleSignupSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('signupConfirmPassword').value;
+      const toastAlert = document.getElementById('toastAlert');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastBody = document.getElementById('toastBody');
+
+      if (!/\.com$/i.test(email.trim())) {
+        toastTitle.textContent = 'Invalid Email!';
+        toastBody.textContent = 'Email must end in .com (e.g. name@domain.com).';
+        toastAlert.style.borderLeftColor = '#C0392B';
+        toastAlert.classList.add('show');
+        setTimeout(() => {
+          toastAlert.classList.remove('show');
+          toastAlert.style.borderLeftColor = '';
+        }, 2500);
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        toastTitle.textContent = 'Password Mismatch!';
+        toastBody.textContent = 'Your passwords do not match. Please try again.';
+        toastAlert.style.borderLeftColor = '#C0392B';
+        toastAlert.classList.add('show');
+        setTimeout(() => {
+          toastAlert.classList.remove('show');
+          toastAlert.style.borderLeftColor = '';
+        }, 2500);
+        return;
+      }
+
+      toastAlert.style.borderLeftColor = '';
+      toastTitle.textContent = currentRole === 'manager' ? 'Manager Account Created!' : 'Account Created!';
+      toastBody.textContent = currentRole === 'manager'
+        ? `Welcome aboard, ${name.split(' ')[0]}! Manager access requested for ${email}.`
+        : `Welcome aboard, ${name.split(' ')[0]}! Check ${email} to verify your account.`;
+      toastAlert.classList.add('show');
+      setTimeout(() => {
+        toastAlert.classList.remove('show');
+        window.location.href = 'login.html';
+      }, 2500);
+    }
+
+    function socialSignup(provider) {
+      const toastAlert = document.getElementById('toastAlert');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastBody = document.getElementById('toastBody');
+      const roleLabel = currentRole === 'manager' ? 'Manager' : 'Member';
+      toastTitle.textContent = `${provider} Sign-Up`;
+      toastBody.textContent = `Creating your ${roleLabel} account with ${provider}...`;
+      toastAlert.classList.add('show');
+      setTimeout(() => {
+        toastAlert.classList.remove('show');
+        window.location.href = 'login.html';
+      }, 2000);
+    }
+  </script>
+
+<!-- Unique Stackly Agriculture Preloader Overlay -->
+<div class="stackly-preloader" id="stacklyPreloader" aria-hidden="true">
+  <div class="preloader-content">
+    <div class="preloader-agri-symbol">
+      <div class="agri-ring"></div>
+      <div class="agri-ring-outer"></div>
+      <span class="agri-icon">🌾</span>
+    </div>
+    
+    <div class="preloader-logo-wrap">
+      <img src="logo_matching_light.webp" alt="Stackly Logo" class="preloader-logo-img">
+    </div>
+    
+    <div class="preloader-track">
+      <div class="preloader-fill" id="preloaderFill"></div>
+    </div>
+    
+    <div class="preloader-subtext">STACKLY ORGANIC FARM · HARVESTING NATURE</div>
+  </div>
+</div>
+
+<script>
+function triggerLogoPreloader(e) {
+  if (e) e.preventDefault();
+  const preloader = document.getElementById('stacklyPreloader');
+  const fill = document.getElementById('preloaderFill');
+  const targetUrl = (e && e.currentTarget && e.currentTarget.getAttribute('href')) || 'home.html';
+
+  if (preloader && fill) {
+    fill.style.width = '0%';
+    preloader.classList.add('active');
+
+    setTimeout(() => { fill.style.width = '100%'; }, 30);
+
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 650);
+  } else {
+    window.location.href = targetUrl;
+  }
+}
+</script>
+
+<script>
+/* remember originating page + scroll before navigating to 404 (Back to Previous fallback) */
+document.addEventListener('click', function(e){
+  var el = e.target && e.target.closest ? e.target.closest('a[href],button') : null;
+  if(!el) return;
+  var href = el.getAttribute('href') || el.getAttribute('onclick') || '';
+  if(href.indexOf('404.html') !== -1){
+    try{
+      sessionStorage.setItem('stacklyBackTo', window.location.href);
+      sessionStorage.setItem('stacklyBackScroll', String(window.scrollY));
+    }catch(err){}
+  }
+}, true);
+/* restore scroll position when returning from 404 */
+(function(){
+  function restoreBackScroll(){
+    try{
+      var back = sessionStorage.getItem('stacklyBackTo');
+      var scroll = sessionStorage.getItem('stacklyBackScroll');
+      if(back && back === window.location.href && window.location.href.indexOf('404.html') === -1 && scroll !== null){
+        sessionStorage.removeItem('stacklyBackTo');
+        sessionStorage.removeItem('stacklyBackScroll');
+        var y = parseInt(scroll, 10);
+        if(!isNaN(y) && y > 0){
+          window.scrollTo(0, y);
+          setTimeout(function(){ window.scrollTo(0, y); }, 300);
+        }
+      }
+    }catch(err){}
+  }
+  if(document.readyState === 'complete'){ restoreBackScroll(); }
+  else { window.addEventListener('load', restoreBackScroll); }
+})();
+</script></body>
+</html>

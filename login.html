@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login & Member Portal — Stackly Organic Farm</title>
+  <meta name="description" content="Sign in to your Stackly Organic Farm member or manager account. Manage CSA subscriptions, track fresh harvest boxes, and view farm inventory.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --forest: #1F3B2C;
+      --forest-2: #122318;
+      --wheat: #D4A544;
+      --wheat-2: #E9C876;
+      --clay: #A6613A;
+      --cream: #F6F1E4;
+      --paper: #FCFAF3;
+      --sage: #7C9473;
+      --ink: #1B211E;
+      --ink-soft: #4A5550;
+      --line: rgba(31,59,44,0.12);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; font-family:'Inter', sans-serif; background:var(--forest-2); color:var(--paper); }
+    body { min-height:100vh; display:flex; flex-direction:column; overflow-x:hidden; position:relative; }
+
+    /* Top Announcement Bar */
+    .announce-bar {
+      background: linear-gradient(90deg, #122318 0%, #1F3B2C 50%, #122318 100%);
+      color: var(--wheat-2); font-size:0.8rem; font-weight:500; text-align:center; padding:9px 16px;
+      border-bottom:1px solid rgba(212,165,68,0.2); font-family:'JetBrains Mono', monospace; letter-spacing:0.04em;
+    }
+
+    /* Site Header */
+    header {
+      position:sticky; top:0; z-index:1000; background:rgba(18,35,24,0.92); backdrop-filter:blur(14px);
+      border-bottom:1px solid rgba(252,250,243,0.1); padding:16px 0; transition:all 0.3s ease;
+    }
+    .wrap { max-width:1240px; margin:0 auto; padding:0 24px; }
+    .header-inner { display:flex; align-items:center; justify-space-between; gap:20px; }
+    
+    .logo-wrap { display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--paper); }
+    .logo-img { height:40px; width:auto; display:block; }
+
+    nav.links { display:flex; gap:24px; align-items:center; }
+    nav.links a {
+      font-size:0.9rem; font-weight:500; color:rgba(252,250,243,0.85); text-decoration:none;
+      position:relative; padding-bottom:4px; transition:color 0.3s ease;
+    }
+    nav.links a:hover, nav.links a.active { color:var(--wheat-2); }
+    nav.links a.active::after {
+      content:""; position:absolute; bottom:0; left:0; width:100%; height:2px; background:var(--wheat-2); border-radius:2px;
+    }
+    .nav-btn-login {
+      background:var(--wheat); color:var(--forest-2); font-weight:700; font-size:0.85rem;
+      padding:9px 20px; border-radius:100px; text-decoration:none; transition:all 0.3s ease;
+      box-shadow:0 4px 14px rgba(212,165,68,0.3);
+    }
+    .nav-btn-login:hover { background:var(--wheat-2); transform:translateY(-2px); }
+
+    /* Mobile Menu Toggle */
+    .menu-btn { display:none; background:none; border:none; color:var(--paper); font-size:1.6rem; cursor:pointer; }
+    @media (max-width:960px){
+      nav.links { display:none; }
+      .menu-btn { display:block; }
+    }
+
+    /* Main Login Hero Layout */
+    .login-section {
+      min-height:100vh; padding:20px 20px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+      position:relative; background:url('images/farm_img_015.webp') center center / cover no-repeat;
+    }
+    .login-logo { position:relative; z-index:2; display:block; text-decoration:none; }
+    .login-logo img { height:56px; width:auto; display:block; filter:drop-shadow(0 6px 18px rgba(0,0,0,0.5)); }
+    .login-form-side .login-logo { align-self:flex-start; margin-bottom:14px; }
+    .login-form-side .login-logo img { height:42px; filter:drop-shadow(0 4px 12px rgba(0,0,0,0.45)); }
+    .login-bg-overlay {
+      position:absolute; inset:0; background:radial-gradient(circle at 50% 30%, rgba(18,35,24,0.82) 0%, rgba(18,35,24,0.96) 100%);
+      z-index:1;
+    }
+
+    .login-container {
+      position:relative; z-index:2; width:100%; max-width:1040px; display:grid; grid-template-columns:1fr 1.15fr;
+      border-radius:32px; overflow:hidden; border:1px solid rgba(212,165,68,0.25);
+      box-shadow:0 35px 80px rgba(0,0,0,0.55); backdrop-filter:blur(16px); background:rgba(18,35,24,0.75);
+    }
+
+    /* Left Banner Side */
+    .login-banner-side {
+      position:relative; padding:32px 34px; display:flex; flex-direction:column; justify-content:space-between;
+      background:linear-gradient(135deg, rgba(31,59,44,0.95) 0%, rgba(18,35,24,0.9) 100%),
+                 url('images/farm_img_075.webp') center/cover;
+      border-right:1px solid rgba(212,165,68,0.18);
+    }
+    .banner-badge {
+      display:inline-flex; align-items:center; gap:8px; background:rgba(212,165,68,0.15); border:1px solid var(--wheat);
+      color:var(--wheat-2); padding:6px 14px; border-radius:100px; font-family:'JetBrains Mono', monospace;
+      font-size:0.75rem; text-transform:uppercase; letter-spacing:0.1em; width:max-content; margin-bottom:18px;
+    }
+    .banner-title {
+      font-family:'Fraunces', serif; font-size:2rem; font-weight:600; color:var(--paper); line-height:1.15; margin-bottom:12px;
+    }
+    .banner-title span { color:var(--wheat-2); }
+    .banner-desc { color:rgba(252,250,243,0.8); font-size:0.9rem; line-height:1.5; margin-bottom:22px; }
+
+    .role-perks-list { display:flex; flex-direction:column; gap:12px; }
+    .perk-item { display:flex; align-items:flex-start; gap:14px; }
+    .perk-icon {
+      width:36px; height:36px; border-radius:50%; background:rgba(212,165,68,0.2); border:1px solid var(--wheat);
+      color:var(--wheat-2); display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; margin-top:2px;
+    }
+    .perk-info h5 { font-size:0.95rem; font-weight:600; color:var(--paper); }
+    .perk-info p { font-size:0.82rem; color:rgba(252,250,243,0.65); line-height:1.45; }
+
+    .banner-footer { margin-top:22px; padding-top:16px; border-top:1px solid rgba(252,250,243,0.12); font-size:0.8rem; color:rgba(252,250,243,0.6); }
+
+    /* Right Form Side */
+    .login-form-side { padding:24px 32px; display:flex; flex-direction:column; justify-content:center; }
+    @media (max-width:540px){ .login-form-side { padding:20px 20px; } }
+
+    /* Role Selector Tabs */
+    .role-tabs-wrapper { margin-bottom:14px; }
+    .role-tabs-label { font-family:'JetBrains Mono', monospace; font-size:0.75rem; text-transform:uppercase; color:var(--wheat-2); letter-spacing:0.12em; margin-bottom:12px; display:block; }
+    .role-tabs {
+      display:grid; grid-template-columns:1fr 1fr; background:rgba(0,0,0,0.35); padding:6px; border-radius:18px;
+      border:1px solid rgba(252,250,243,0.12); gap:6px;
+    }
+    .role-tab-btn {
+      background:none; border:none; padding:9px 12px; border-radius:14px; font-size:0.88rem; font-weight:600;
+      color:rgba(252,250,243,0.7); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+      transition:all 0.3s ease; font-family:'Inter', sans-serif;
+    }
+    .role-tab-btn.active {
+      background:var(--forest); color:var(--paper); box-shadow:0 6px 20px rgba(0,0,0,0.3); border:1px solid rgba(212,165,68,0.4);
+    }
+    .role-tab-btn.active.manager-mode {
+      background:var(--clay); border-color:#D48644;
+    }
+    .role-tab-btn .badge-icon { font-size:1.1rem; }
+
+    /* Form Fields */
+    .form-header { margin-bottom:14px; }
+    .form-header h3 { font-family:'Fraunces', serif; font-size:1.4rem; font-weight:600; color:var(--paper); margin-bottom:6px; }
+    .form-header p { font-size:0.86rem; color:rgba(252,250,243,0.7); line-height:1.5; }
+
+    .form-group { margin-bottom:12px; }
+    .form-group label {
+      display:block; font-family:'JetBrains Mono', monospace; font-size:0.75rem; text-transform:uppercase;
+      color:var(--paper); letter-spacing:0.08em; margin-bottom:8px;
+    }
+    .input-wrapper { position:relative; display:flex; align-items:center; }
+    .input-icon { position:absolute; left:16px; color:rgba(252,250,243,0.45); font-size:1.1rem; }
+    .form-input {
+      width:100%; padding:11px 14px 11px 44px; border-radius:14px; background:rgba(255,255,255,0.06);
+      border:1px solid rgba(252,250,243,0.18); color:var(--paper); font-size:0.95rem; font-family:'Inter', sans-serif;
+      transition:all 0.3s ease;
+    }
+    .form-input::placeholder { color:rgba(252,250,243,0.35); }
+    .form-input:focus {
+      outline:none; background:rgba(255,255,255,0.1); border-color:var(--wheat);
+      box-shadow:0 0 0 3px rgba(212,165,68,0.2);
+    }
+
+    .toggle-pass-btn {
+      position:absolute; right:16px; background:none; border:none; color:rgba(252,250,243,0.5);
+      cursor:pointer; font-size:1.1rem; transition:color 0.3s ease;
+    }
+    .toggle-pass-btn:hover { color:var(--wheat-2); }
+
+    /* Form Options Row */
+    .form-options { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; font-size:0.85rem; }
+    .remember-me { display:flex; align-items:center; gap:8px; color:rgba(252,250,243,0.8); cursor:pointer; }
+    .remember-me input { accent-color:var(--wheat); width:16px; height:16px; cursor:pointer; }
+    .forgot-link { color:var(--wheat-2); text-decoration:none; font-weight:500; transition:color 0.3s ease; }
+    .forgot-link:hover { color:var(--wheat); text-decoration:underline; }
+
+    /* Submit Button */
+    .btn-submit-login {
+      width:100%; padding:12px; border-radius:100px; border:none; background:var(--wheat); color:var(--forest-2);
+      font-size:0.95rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;
+      transition:all 0.3s ease; box-shadow:0 8px 24px rgba(212,165,68,0.35); font-family:'Inter', sans-serif;
+    }
+    .btn-submit-login:hover { background:var(--wheat-2); transform:translateY(-2px); box-shadow:0 12px 30px rgba(212,165,68,0.45); }
+    .btn-submit-login.manager-theme { background:var(--clay); color:var(--paper); box-shadow:0 8px 24px rgba(166,97,58,0.4); }
+    .btn-submit-login.manager-theme:hover { background:#B86F45; }
+
+    /* Social Login & Signup CTA */
+    .social-login-section { margin-top:12px; padding-top:12px; border-top:1px solid rgba(252,250,243,0.1); }
+    .social-divider { display:flex; align-items:center; gap:14px; font-size:0.72rem; font-family:'JetBrains Mono', monospace; color:rgba(252,250,243,0.5); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px; }
+    .social-divider::before, .social-divider::after { content:""; flex-grow:1; height:1px; background:rgba(252,250,243,0.1); }
+    .social-icons-row { display:flex; justify-content:center; gap:12px; }
+    .social-icon-btn {
+      width:46px; height:46px; border-radius:14px; background:rgba(252,250,243,0.06); border:1px solid rgba(252,250,243,0.16);
+      color:var(--paper); display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.3s ease;
+    }
+    .social-icon-btn:hover { background:rgba(212,165,68,0.18); border-color:var(--wheat); color:var(--wheat-2); transform:translateY(-3px); }
+    .signup-cta { margin-top:14px; text-align:center; }
+    .signup-cta p { font-size:0.85rem; color:rgba(252,250,243,0.6); margin-bottom:4px; }
+    .signup-cta a { color:var(--wheat-2); font-weight:600; text-decoration:none; }
+    .signup-cta a:hover { text-decoration:underline; }
+
+    /* Back Button (top-right of card) */
+    .back-btn {
+      position:absolute; top:16px; right:18px; z-index:5; width:38px; height:38px;
+      display:flex; align-items:center; justify-content:center; border-radius:50%;
+      background:rgba(252,250,243,0.1); border:1px solid rgba(252,250,243,0.25);
+      color:var(--paper); font-size:1.15rem; text-decoration:none; transition:all 0.3s ease;
+    }
+    .back-btn:hover { background:var(--wheat); color:var(--forest-2); border-color:var(--wheat); transform:translateY(-2px); }
+
+    /* Login Alert / Toast */
+    .toast-alert {
+      position:fixed; top:24px; right:24px; z-index:3000; background:var(--paper); color:var(--forest-2);
+      padding:16px 24px; border-radius:18px; box-shadow:0 20px 40px rgba(0,0,0,0.4); border-left:6px solid #5B8C4A;
+      display:flex; align-items:center; gap:14px; transform:translateY(-100px); opacity:0; transition:all 0.4s cubic-bezier(0.2,0.8,0.2,1);
+    }
+    .toast-alert.show { transform:translateY(0); opacity:1; }
+    .toast-icon { width:32px; height:32px; border-radius:50%; background:#5B8C4A; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+    .toast-text h6 { font-size:0.95rem; font-weight:700; color:var(--forest-2); margin-bottom:2px; }
+    .toast-text p { font-size:0.82rem; color:var(--ink-soft); }
+
+    /* Footer Section */
+    footer {
+      position:relative; background:url('images/farm_img_015.webp') center center / cover no-repeat;
+      overflow:hidden; border-top:1px solid rgba(212,165,68,0.2);
+    }
+    .footer-overlay {
+      position:relative; z-index:2; background:linear-gradient(180deg, rgba(18,35,24,0.94) 0%, rgba(18,35,24,0.98) 100%);
+      padding:70px 0 30px;
+    }
+    .footer-contact-row { display:grid; grid-template-columns:repeat(3, 1fr); gap:30px; padding-bottom:40px; border-bottom:1px solid rgba(212,165,68,0.25); margin-bottom:50px; }
+    @media (max-width:900px){ .footer-contact-row{grid-template-columns:1fr; gap:24px;} }
+
+    .footer-contact-item { display:flex; align-items:center; gap:18px; }
+    .footer-contact-icon {
+      width:54px; height:54px; border-radius:50%; background:var(--wheat); color:var(--forest-2);
+      display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0;
+      box-shadow:0 8px 22px rgba(212,165,68,0.35); transition:transform 0.3s ease;
+    }
+    .footer-contact-item:hover .footer-contact-icon { transform:scale(1.1) rotate(6deg); }
+    .footer-contact-info label { display:block; font-weight:700; color:var(--paper); font-size:0.95rem; margin-bottom:4px; }
+    .footer-contact-info p { color:rgba(252,250,243,0.75); font-size:0.86rem; line-height:1.45; margin:0; }
+
+    .footer-main-grid { display:grid; grid-template-columns:1.3fr 1fr 1fr 1.3fr; gap:44px; padding-bottom:50px; }
+    @media (max-width:1024px){ .footer-main-grid{grid-template-columns:1fr 1fr; gap:36px;} }
+    @media (max-width:600px){ .footer-main-grid{grid-template-columns:1fr; gap:32px;} }
+
+    .footer-brand { display:flex; flex-direction:column; align-items:flex-start; text-align:left; }
+    .footer-logo-wrap { display:block !important; margin-bottom:18px !important; text-decoration:none !important; }
+    .footer-logo-pic { height:44px !important; width:auto !important; max-width:210px !important; object-fit:contain !important; display:block !important; }
+    .footer-brand p { color:rgba(252,250,243,0.75); font-size:0.9rem; line-height:1.65; margin:0 0 22px 0; max-width:320px; }
+
+    .footer-socials { display:flex; gap:12px; align-items:center; }
+    .footer-social-link {
+      width:40px; height:40px; border-radius:50%; background:rgba(252,250,243,0.08);
+      border:1px solid rgba(252,250,243,0.18); color:var(--paper); display:flex; align-items:center;
+      justify-content:center; transition:all 0.3s ease; text-decoration:none;
+    }
+    .footer-social-link:hover { background:var(--wheat); color:var(--forest-2); border-color:var(--wheat); transform:translateY(-4px); }
+
+    .footer-col h4 { font-family:'Fraunces', serif; font-size:1.2rem; font-weight:600; color:var(--paper); margin-bottom:20px; position:relative; padding-bottom:8px; display:inline-block; }
+    .footer-col h4::after { content:""; position:absolute; bottom:0; left:0; width:36px; height:3px; background:var(--wheat); border-radius:3px; }
+    .footer-col a { display:block; color:rgba(252,250,243,0.75); text-decoration:none; margin-bottom:10px; font-size:0.9rem; transition:color 0.3s ease; }
+    .footer-col a:hover { color:var(--wheat-2); padding-left:4px; }
+
+    .footer-bottom-bar {
+      border-top:1px solid rgba(252,250,243,0.12); padding-top:26px; display:flex; justify-content:space-between;
+      align-items:center; font-size:0.85rem; color:rgba(252,250,243,0.65); flex-wrap:wrap; gap:16px;
+    }
+    .footer-bottom-links { display:flex; gap:20px; align-items:center; }
+    .footer-bottom-links a { color:rgba(252,250,243,0.65); text-decoration:none; }
+    .footer-bottom-links a:hover { color:var(--wheat-2); }
+    .footer-to-top-btn {
+      width:38px; height:38px; border-radius:50%; background:var(--wheat); color:var(--forest-2);
+      display:inline-flex; align-items:center; justify-content:center; text-decoration:none; font-weight:bold;
+      box-shadow:0 6px 16px rgba(212,165,68,0.3); transition:transform 0.3s ease;
+    }
+    .footer-to-top-btn:hover { transform:scale(1.15); background:var(--wheat-2); }
+
+    /* Responsive fallbacks (kept last so they override base rules) */
+    @media (max-width:880px){
+      .login-container { grid-template-columns:1fr; max-width:540px; }
+      .login-banner-side { display:none; }
+    }
+    @media (max-height:840px){
+      .login-container { grid-template-columns:1fr; max-width:540px; }
+      .login-banner-side { display:none; }
+      .login-section { padding:12px 16px; }
+    }
+    @media (max-height:640px){
+      .login-section { justify-content:flex-start; align-items:flex-start; }
+      .login-container { max-width:100%; }
+    }
+  </style>
+<style>
+
+/* ---------- Unique Stackly Agriculture Preloader Overlay ---------- */
+.stackly-preloader {
+  position: fixed; inset: 0; z-index: 999999;
+  background: rgba(18, 35, 24, 0.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease;
+  pointer-events: none;
+}
+
+.stackly-preloader.active {
+  opacity: 1; visibility: visible; pointer-events: auto;
+}
+
+.preloader-content {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 40px 32px; border-radius: 28px; background: rgba(31, 59, 44, 0.5);
+  border: 1px solid rgba(212, 165, 68, 0.4); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+  max-width: 380px; width: 88%; transform: scale(0.92); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stackly-preloader.active .preloader-content {
+  transform: scale(1);
+}
+
+.preloader-agri-symbol {
+  position: relative; width: 80px; height: 80px; display: flex; align-items: center;
+  justify-content: center; margin-bottom: 18px;
+}
+
+.agri-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px dashed rgba(212, 165, 68, 0.6);
+  border-top-color: #E9C876; border-right-color: #D4A544;
+  animation: agriRingSpin 1.2s linear infinite;
+}
+
+.agri-ring-outer {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px solid rgba(233, 200, 118, 0.25);
+  animation: agriPulseGlow 1.5s ease-in-out infinite alternate;
+}
+
+.agri-icon {
+  font-size: 2.5rem; filter: drop-shadow(0 0 14px rgba(212, 165, 68, 0.9));
+  animation: agriBounce 0.6s ease-in-out infinite alternate;
+}
+
+.preloader-logo-wrap {
+  margin-bottom: 22px;
+}
+
+.preloader-logo-img {
+  height: 44px; width: auto; object-fit: contain;
+  filter: drop-shadow(0 4px 18px rgba(212, 165, 68, 0.5));
+  animation: logoGlow 1.2s ease-in-out infinite alternate;
+}
+
+.preloader-track {
+  width: 100%; height: 5px; background: rgba(252, 250, 243, 0.14);
+  border-radius: 100px; overflow: hidden; margin-bottom: 16px; position: relative;
+}
+
+.preloader-fill {
+  height: 100%; width: 0%; border-radius: 100px;
+  background: linear-gradient(90deg, #D4A544, #FFF8DB, #E9C876);
+  box-shadow: 0 0 14px rgba(233, 200, 118, 0.95);
+  transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.preloader-subtext {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+  color: rgba(252, 250, 243, 0.78); letter-spacing: 0.16em; text-transform: uppercase;
+}
+
+@keyframes agriRingSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes agriPulseGlow { 0% { transform: scale(0.95); opacity: 0.4; } 100% { transform: scale(1.08); opacity: 0.9; } }
+@keyframes agriBounce { 0% { transform: scale(0.92) translateY(0); } 100% { transform: scale(1.1) translateY(-5px); } }
+@keyframes logoGlow { 0% { opacity: 0.85; filter: drop-shadow(0 2px 8px rgba(212, 165, 68, 0.3)); } 100% { opacity: 1; filter: drop-shadow(0 6px 20px rgba(233, 200, 118, 0.9)); } }
+
+</style>
+</head>
+<body>
+
+  <!-- Login Section -->
+  <main class="login-section">
+    <div class="login-bg-overlay"></div>
+
+    <div class="login-container">
+      <a href="home.html" class="back-btn" title="Back to Home" aria-label="Back to Home" onclick="triggerLogoPreloader(event)">←</a>
+      
+      <!-- Left Banner Side -->
+      <div class="login-banner-side" id="loginBannerSide">
+        <div>
+          <div class="banner-badge" id="bannerBadge">🌾 Customer & CSA Member Portal</div>
+          <h2 class="banner-title" id="bannerTitle">Fresh Harvest <span>Delivered To</span> Your Door</h2>
+          <p class="banner-desc" id="bannerDesc">Manage your weekly CSA farm box, customize seasonal produce picks, and track your local organic subscriptions in real-time.</p>
+
+          <div class="role-perks-list" id="perksList">
+            <div class="perk-item">
+              <div class="perk-icon">📦</div>
+              <div class="perk-info">
+                <h5>Weekly Box Customization</h5>
+                <p>Swap heirloom crops and add extra pastured eggs before Thursday harvest.</p>
+              </div>
+            </div>
+            <div class="perk-item">
+              <div class="perk-icon">🚚</div>
+              <div class="perk-info">
+                <h5>Live Delivery Tracking</h5>
+                <p>Follow your refrigerated farm truck from Willow Valley straight to your home.</p>
+              </div>
+            </div>
+            <div class="perk-item">
+              <div class="perk-icon">🏷️</div>
+              <div class="perk-info">
+                <h5>15% Member Discount</h5>
+                <p>Exclusive member pricing on cold-pressed oils and heritage milled wheat flour.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="banner-footer">
+          Stackly Regenerative Farm · Established 1989 · Willow Valley, OR
+        </div>
+      </div>
+
+      <!-- Right Form Side -->
+      <div class="login-form-side">
+
+        <a href="home.html" class="login-logo" aria-label="Stackly Organic Farm" onclick="triggerLogoPreloader(event)">
+          <img src="logo_matching_light.webp" alt="Stackly Logo">
+        </a>
+
+        <!-- Role Selector Switch -->
+        <div class="role-tabs-wrapper">
+          <span class="role-tabs-label">Select Account Role:</span>
+          <div class="role-tabs">
+            <button class="role-tab-btn active" id="tabCustomer" onclick="switchRole('customer')">
+              <span class="badge-icon">🌾</span> Customer / Member
+            </button>
+            <button class="role-tab-btn" id="tabManager" onclick="switchRole('manager')">
+              <span class="badge-icon">🚜</span> Farm Manager
+            </button>
+          </div>
+        </div>
+
+        <!-- Form Title -->
+        <div class="form-header">
+          <h3 id="formHeaderTitle">Sign In to Your Account</h3>
+          <p id="formHeaderSub">Enter your registered email and password to access your member dashboard.</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" onsubmit="handleLoginSubmit(event)">
+          
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input type="email" id="loginEmail" class="form-input" placeholder="name@example.com" required value="member@stackly.com" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com" title="Email must end in .com (e.g. name@domain.com)">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="loginPassword" class="form-input" placeholder="••••••••••••" required value="organic2026">
+              <button type="button" class="toggle-pass-btn" onclick="togglePasswordVisibility()" title="Show/Hide Password">👁️</button>
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" checked id="rememberCheck">
+              <span>Remember this device</span>
+            </label>
+            <a href="404.html" class="forgot-link">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn-submit-login" id="btnSubmitLogin">
+            <span id="submitBtnText">Sign In as Customer →</span>
+          </button>
+        </form>
+
+        <!-- Social Login & Sign Up -->
+        <div class="social-login-section">
+          <div class="social-divider">or continue with</div>
+          <div class="social-icons-row">
+            <button class="social-icon-btn" type="button" onclick="location.href='404.html'" aria-label="Continue with Google" title="Google">
+              <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M21.35 11.1H12v3.9h5.4c-.44 2.55-2.63 4.1-5.4 4.1-3.28 0-5.95-2.67-5.95-5.95S8.72 7.2 12 7.2c1.4 0 2.68.49 3.67 1.3l2.88-2.88C16.9 4.2 14.6 3.2 12 3.2 7.03 3.2 3 7.23 3 12.2s4.03 9 9 9c5.02 0 8.75-3.68 8.75-8.95 0-.57-.05-1.1-.4-2.15z"/></svg>
+            </button>
+            <button class="social-icon-btn" type="button" onclick="location.href='404.html'" aria-label="Continue with Apple" title="Apple">
+              <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M17.05 20.28c-.98.95-2.05.86-3.08.38-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.38C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.53 4.08zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            </button>
+            <button class="social-icon-btn" type="button" onclick="location.href='404.html'" aria-label="Continue with Facebook" title="Facebook">
+              <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M24 12.07C24 5.41 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.8-4.7 4.55-4.7 1.32 0 2.7.24 2.7.24v2.97h-1.52c-1.5 0-1.96.93-1.96 1.89v2.26h3.34l-.53 3.49h-2.81V24C19.61 23.09 24 18.1 24 12.07z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="signup-cta">
+          <p>New to Stackly Farm?</p>
+          <a href="signup.html">Sign Up →</a>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Login Toast Notification -->
+  <div class="toast-alert" id="toastAlert">
+    <div class="toast-icon">✓</div>
+    <div class="toast-text">
+      <h6 id="toastTitle">Login Successful!</h6>
+      <p id="toastBody">Redirecting to your Stackly Dashboard...</p>
+    </div>
+  </div>
+
+  <script>
+    let currentRole = 'customer';
+
+    function switchRole(role) {
+      currentRole = role;
+      const tabCustomer = document.getElementById('tabCustomer');
+      const tabManager = document.getElementById('tabManager');
+      const bannerBadge = document.getElementById('bannerBadge');
+      const bannerTitle = document.getElementById('bannerTitle');
+      const bannerDesc = document.getElementById('bannerDesc');
+      const perksList = document.getElementById('perksList');
+      const formHeaderTitle = document.getElementById('formHeaderTitle');
+      const formHeaderSub = document.getElementById('formHeaderSub');
+      const submitBtnText = document.getElementById('submitBtnText');
+      const btnSubmitLogin = document.getElementById('btnSubmitLogin');
+      const loginEmail = document.getElementById('loginEmail');
+      const loginPassword = document.getElementById('loginPassword');
+
+      if (role === 'customer') {
+        tabCustomer.classList.add('active');
+        tabCustomer.classList.remove('manager-mode');
+        tabManager.classList.remove('active', 'manager-mode');
+        btnSubmitLogin.classList.remove('manager-theme');
+
+        bannerBadge.innerHTML = '🌾 Customer & CSA Member Portal';
+        bannerTitle.innerHTML = 'Fresh Harvest <span>Delivered To</span> Your Door';
+        bannerDesc.textContent = 'Manage your weekly CSA farm box, customize seasonal produce picks, and track your local organic subscriptions in real-time.';
+
+        perksList.innerHTML = `
+          <div class="perk-item">
+            <div class="perk-icon">📦</div>
+            <div class="perk-info">
+              <h5>Weekly Box Customization</h5>
+              <p>Swap heirloom crops and add extra pastured eggs before Thursday harvest.</p>
+            </div>
+          </div>
+          <div class="perk-item">
+            <div class="perk-icon">🚚</div>
+            <div class="perk-info">
+              <h5>Live Delivery Tracking</h5>
+              <p>Follow your refrigerated farm truck from Willow Valley straight to your home.</p>
+            </div>
+          </div>
+          <div class="perk-item">
+            <div class="perk-icon">🏷️</div>
+            <div class="perk-info">
+              <h5>15% Member Discount</h5>
+              <p>Exclusive member pricing on cold-pressed oils and heritage milled wheat flour.</p>
+            </div>
+          </div>
+        `;
+
+        formHeaderTitle.textContent = 'Customer Member Login';
+        formHeaderSub.textContent = 'Welcome back! Sign in to manage your harvest box & farm orders.';
+        submitBtnText.textContent = 'Sign In as Customer →';
+        loginEmail.value = 'member@stackly.com';
+        loginPassword.value = 'organic2026';
+
+      } else {
+        tabManager.classList.add('active', 'manager-mode');
+        tabCustomer.classList.remove('active');
+        btnSubmitLogin.classList.add('manager-theme');
+
+        bannerBadge.innerHTML = '🚜 Farm Manager & Admin Portal';
+        bannerTitle.innerHTML = 'Regenerative <span>Soil & Harvest</span> Control';
+        bannerDesc.textContent = 'Access crop yield metrics, soil moisture sensor logs, inventory dispatching, and member CSA fulfillment schedules.';
+
+        perksList.innerHTML = `
+          <div class="perk-item">
+            <div class="perk-icon" style="background:rgba(166,97,58,0.25); border-color:#D48644; color:#E9C876;">📊</div>
+            <div class="perk-info">
+              <h5>Harvest & Yield Analytics</h5>
+              <p>Monitor daily yield per acre, soil moisture sensors, and greenhouse temperatures.</p>
+            </div>
+          </div>
+          <div class="perk-item">
+            <div class="perk-icon" style="background:rgba(166,97,58,0.25); border-color:#D48644; color:#E9C876;">🚜</div>
+            <div class="perk-info">
+              <h5>Inventory & Dispatch Control</h5>
+              <p>Manage farm stand inventory, wholesale orders, and Thursday truck routes.</p>
+            </div>
+          </div>
+          <div class="perk-item">
+            <div class="perk-icon" style="background:rgba(166,97,58,0.25); border-color:#D48644; color:#E9C876;">👥</div>
+            <div class="perk-info">
+              <h5>Member Roster Management</h5>
+              <p>Review active CSA subscriptions, payment receipts, and delivery instructions.</p>
+            </div>
+          </div>
+        `;
+
+        formHeaderTitle.textContent = 'Farm Manager Login';
+        formHeaderSub.textContent = 'Enter manager credentials to access soil analytics & inventory logs.';
+        submitBtnText.textContent = 'Access Manager Portal →';
+        loginEmail.value = 'manager@stackly.com';
+        loginPassword.value = 'harvestAdmin99';
+      }
+    }
+
+    function togglePasswordVisibility() {
+      const passInput = document.getElementById('loginPassword');
+      if (passInput.type === 'password') {
+        passInput.type = 'text';
+      } else {
+        passInput.type = 'password';
+      }
+    }
+
+    function fillDemo(role) {
+      switchRole(role);
+    }
+
+    function saveSession(email, role) {
+      localStorage.setItem('stacklyUser', JSON.stringify({
+        email: email,
+        role: role,
+        name: role === 'manager' ? 'Farm Manager' : 'Member'
+      }));
+    }
+
+    function socialLogin(provider) {
+      const toastAlert = document.getElementById('toastAlert');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastBody = document.getElementById('toastBody');
+      saveSession(`${provider.toLowerCase()}@stackly.farm`, currentRole);
+      toastTitle.textContent = `${provider} Sign-In`;
+      toastBody.textContent = `Connecting to ${provider} to authenticate your Stackly account...`;
+      toastAlert.classList.add('show');
+      setTimeout(() => {
+        toastAlert.classList.remove('show');
+        window.location.href = 'dashboard.html';
+      }, 1500);
+    }
+
+    function handleLoginSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const toastAlert = document.getElementById('toastAlert');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastBody = document.getElementById('toastBody');
+
+      if (!/\.com$/i.test(email.trim())) {
+        toastTitle.textContent = 'Invalid Email!';
+        toastBody.textContent = 'Email must end in .com (e.g. name@domain.com).';
+        toastAlert.style.borderLeftColor = '#C0392B';
+        toastAlert.classList.add('show');
+        setTimeout(() => {
+          toastAlert.classList.remove('show');
+          toastAlert.style.borderLeftColor = '';
+        }, 2500);
+        return;
+      }
+
+      saveSession(email, currentRole);
+
+      if (currentRole === 'customer') {
+        toastTitle.textContent = 'Welcome Back, Member!';
+        toastBody.textContent = `Authenticated as ${email}. Redirecting to your Harvest Dashboard...`;
+      } else {
+        toastTitle.textContent = 'Manager Access Granted!';
+        toastBody.textContent = `Authenticated as ${email}. Loading Farm Management Dashboard...`;
+      }
+
+      toastAlert.classList.add('show');
+
+      setTimeout(() => {
+        toastAlert.classList.remove('show');
+        window.location.href = 'dashboard.html';
+      }, 1500);
+    }
+  </script>
+
+<!-- Unique Stackly Agriculture Preloader Overlay -->
+<div class="stackly-preloader" id="stacklyPreloader" aria-hidden="true">
+  <div class="preloader-content">
+    <div class="preloader-agri-symbol">
+      <div class="agri-ring"></div>
+      <div class="agri-ring-outer"></div>
+      <span class="agri-icon">🌾</span>
+    </div>
+    
+    <div class="preloader-logo-wrap">
+      <img src="logo_matching_light.webp" alt="Stackly Logo" class="preloader-logo-img">
+    </div>
+    
+    <div class="preloader-track">
+      <div class="preloader-fill" id="preloaderFill"></div>
+    </div>
+    
+    <div class="preloader-subtext">STACKLY ORGANIC FARM · HARVESTING NATURE</div>
+  </div>
+</div>
+
+<script>
+function triggerLogoPreloader(e) {
+  if (e) e.preventDefault();
+  const preloader = document.getElementById('stacklyPreloader');
+  const fill = document.getElementById('preloaderFill');
+  const targetUrl = (e && e.currentTarget && e.currentTarget.getAttribute('href')) || 'home.html';
+
+  if (preloader && fill) {
+    fill.style.width = '0%';
+    preloader.classList.add('active');
+
+    setTimeout(() => { fill.style.width = '100%'; }, 30);
+
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 650);
+  } else {
+    window.location.href = targetUrl;
+  }
+}
+</script>
+
+<script>
+/* remember originating page + scroll before navigating to 404 (Back to Previous fallback) */
+document.addEventListener('click', function(e){
+  var el = e.target && e.target.closest ? e.target.closest('a[href],button') : null;
+  if(!el) return;
+  var href = el.getAttribute('href') || el.getAttribute('onclick') || '';
+  if(href.indexOf('404.html') !== -1){
+    try{
+      sessionStorage.setItem('stacklyBackTo', window.location.href);
+      sessionStorage.setItem('stacklyBackScroll', String(window.scrollY));
+    }catch(err){}
+  }
+}, true);
+/* restore scroll position when returning from 404 */
+(function(){
+  function restoreBackScroll(){
+    try{
+      var back = sessionStorage.getItem('stacklyBackTo');
+      var scroll = sessionStorage.getItem('stacklyBackScroll');
+      if(back && back === window.location.href && window.location.href.indexOf('404.html') === -1 && scroll !== null){
+        sessionStorage.removeItem('stacklyBackTo');
+        sessionStorage.removeItem('stacklyBackScroll');
+        var y = parseInt(scroll, 10);
+        if(!isNaN(y) && y > 0){
+          window.scrollTo(0, y);
+          setTimeout(function(){ window.scrollTo(0, y); }, 300);
+        }
+      }
+    }catch(err){}
+  }
+  if(document.readyState === 'complete'){ restoreBackScroll(); }
+  else { window.addEventListener('load', restoreBackScroll); }
+})();
+</script></body>
+</html>

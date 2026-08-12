@@ -1,0 +1,2127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farm Operations & Member Dashboard — Stackly Organic Farm</title>
+  <meta name="description" content="Manage your Stackly organic farm fields, track real-time harvest yields, weather forecasts, predictive analysis, and member accounts.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --forest: #1F3B2C;
+      --forest-dark: #122318;
+      --sidebar-bg: #1B1E1C;
+      --wheat: #D4A544;
+      --wheat-2: #E9C876;
+      --pastel-lime: #E2F1B0;
+      --pastel-green: #DCE7CE;
+      --clay: #A6613A;
+      --cream: #F6F1E4;
+      --paper: #FAF8F2;
+      --card-bg: #FFFFFF;
+      --sage: #7C9473;
+      --ink: #1B211E;
+      --ink-soft: #637069;
+      --line: rgba(31,59,44,0.08);
+      --border-radius: 20px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { min-height:100vh; font-family:'Inter', sans-serif; background:#F4F6F0; color:var(--ink); }
+
+    /* Dashboard Layout */
+    .app-layout { display:flex; min-height:100vh; }
+
+    /* Sidebar Navigation */
+    aside.sidebar {
+      width: 260px; background: var(--sidebar-bg); color: var(--paper); display:flex; flex-direction:column;
+      justify-space-between; padding: 28px 20px; flex-shrink:0; position:sticky; top:0; height:100vh;
+      box-shadow: 6px 0 25px rgba(0,0,0,0.15); z-index:100;
+    }
+
+    .brand-header { display:flex; align-items:center; justify-space-between; margin-bottom:36px; padding:0 8px; }
+    .brand-logo-img { height:36px; width:auto; filter:brightness(1.1); transition:transform 0.3s ease; }
+    .brand-logo-img:hover { transform:scale(1.06); }
+    .brand-name { font-family:'Fraunces', serif; font-weight:700; font-size:1.3rem; color:var(--paper); letter-spacing:-0.02em; }
+    .brand-name span { color:var(--pastel-lime); }
+
+    /* Enhanced Nav List & Tab Hover Animations */
+    .nav-list { list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .nav-item-btn {
+      width:100%; display:flex; align-items:center; gap:14px; padding:13px 18px; border-radius:14px;
+      background:none; border:none; border-left:0px solid var(--wheat); color:rgba(252,250,243,0.7); font-size:0.92rem; font-weight:500;
+      cursor:pointer; transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1); text-align:left; font-family:'Inter', sans-serif;
+      position:relative; overflow:hidden;
+    }
+    .nav-item-btn::before {
+      content:""; position:absolute; inset:0; background:rgba(226,241,176,0.12); opacity:0; transition:opacity 0.3s ease; border-radius:14px;
+    }
+    .nav-item-btn:hover {
+      color:var(--pastel-lime); transform:translateX(6px) scale(1.02);
+    }
+    .nav-item-btn:hover::before { opacity:1; }
+    .nav-item-btn.active {
+      background: linear-gradient(135deg, #E2F1B0 0%, #DCE7CE 100%); color: var(--forest-dark); font-weight:700;
+      border-left:4px solid var(--wheat);
+      box-shadow: 0 8px 24px rgba(226,241,176,0.35); transform:translateX(2px);
+    }
+    .nav-item-btn.active::before { opacity:0; }
+    .nav-icon { font-size:1.15rem; transition:transform 0.3s ease; }
+    .nav-item-btn:hover .nav-icon { transform:scale(1.2) rotate(6deg); }
+
+    .sidebar-footer { padding-top:20px; border-top:1px solid rgba(255,255,255,0.08); }
+    .logout-btn {
+      width:100%; display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:12px;
+      background:none; border:none; color:rgba(252,250,243,0.6); font-size:0.9rem; font-weight:500;
+      cursor:pointer; transition:all 0.3s ease; text-decoration:none;
+    }
+    .logout-btn:hover { color:#E74C3C; background:rgba(231,76,60,0.12); transform:translateX(4px); }
+
+    /* Main Dashboard Content Area */
+    main.main-content { flex-grow:1; padding: 24px 32px; overflow-y:auto; }
+
+    /* Top Profile Bar with Role Switcher */
+    .top-bar { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; gap:20px; flex-wrap:wrap; }
+
+    /* Interactive Role Switcher Toggle Pill */
+    .role-switcher-pill {
+      display: inline-flex; background: rgba(31,59,44,0.08); padding: 4px;
+      border-radius: 100px; border: 1px solid var(--line); gap: 4px; align-items:center;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.04);
+    }
+    .role-pill-btn {
+      border: none; background: none; padding: 8px 16px; border-radius: 100px;
+      font-size: 0.82rem; font-weight: 600; color: var(--ink-soft); cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Inter', sans-serif;
+    }
+    .role-pill-btn.active {
+      background: var(--forest); color: var(--paper); box-shadow: 0 4px 16px rgba(31,59,44,0.25);
+    }
+    .role-pill-btn:hover:not(.active) {
+      background: rgba(31,59,44,0.08); color: var(--forest);
+    }
+
+    .top-right-group { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+
+    .user-profile-badge {
+      display:flex; align-items:center; gap:12px; background:var(--card-bg); padding:6px 16px 6px 8px;
+      border-radius:100px; border:1px solid var(--line); box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+      cursor:pointer; transition:all 0.3s ease;
+    }
+    .user-profile-badge:hover { transform:translateY(-3px) scale(1.02); box-shadow: 0 8px 22px rgba(0,0,0,0.08); border-color:var(--wheat); }
+    .avatar-img { width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid var(--wheat); }
+    .user-info-text { font-size:0.85rem; }
+    .user-name { font-weight:700; color:var(--forest); line-height:1.2; }
+    .user-role-tag { font-size:0.72rem; color:var(--ink-soft); font-family:'JetBrains Mono', monospace; }
+
+    /* Role Content Toggle Visibility Helpers */
+    body.is-manager .role-customer-only { display: none !important; }
+    body.is-customer .role-manager-only { display: none !important; }
+
+    /* Tab View Animations & Transitions */
+    .tab-view { display:none; opacity:0; transform:translateY(18px) scale(0.985); filter:blur(4px); }
+    .tab-view.active {
+      display:block; animation: tabViewIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes tabViewIn {
+      0% { opacity:0; transform:translateY(18px) scale(0.985); filter:blur(4px); }
+      100% { opacity:1; transform:translateY(0) scale(1); filter:blur(0px); }
+    }
+
+    /* Grid Layouts for Dashboard Overview */
+    .dash-grid { display:grid; grid-template-columns: 2fr 1.1fr; gap:26px; }
+    @media (max-width:1150px){ .dash-grid { grid-template-columns:1fr; } }
+
+    .grid-col { display:flex; flex-direction:column; gap:24px; }
+
+    /* Section Titles & Action Rows */
+    .sec-header-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px; }
+    .sec-title { font-family:'Fraunces', serif; font-size:1.25rem; font-weight:600; color:var(--forest); margin:0; }
+
+    /* Manager Quick Action Buttons */
+    .mgr-actions-row { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+    .mgr-btn {
+      padding:8px 16px; border-radius:100px; font-size:0.82rem; font-weight:600; font-family:'Inter', sans-serif;
+      border:1px solid var(--line); background:var(--card-bg); color:var(--forest); cursor:pointer;
+      transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display:inline-flex; align-items:center; gap:6px;
+      box-shadow:0 4px 12px rgba(0,0,0,0.03);
+    }
+    .mgr-btn:hover {
+      background:var(--forest); color:var(--paper); border-color:var(--forest); transform:translateY(-3px) scale(1.03);
+      box-shadow:0 8px 20px rgba(31,59,44,0.2);
+    }
+    .mgr-btn.primary { background:var(--forest); color:var(--paper); }
+    .mgr-btn.primary:hover { background:var(--forest-dark); }
+
+    /* DYNAMIC ASYMMETRIC MANAGER TOP MATRIX */
+    .mgr-top-matrix {
+      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; margin-bottom: 20px;
+    }
+    @media (max-width: 1100px) { .mgr-top-matrix { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 650px) { .mgr-top-matrix { grid-template-columns: 1fr; } }
+
+    .mgr-widget-card {
+      background: var(--card-bg); border-radius: var(--border-radius); padding: 18px 20px;
+      border: 1px solid var(--line); box-shadow: 0 6px 20px rgba(31,59,44,0.04);
+      transition: all 0.35s ease; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .mgr-widget-card:hover {
+      transform: translateY(-5px); box-shadow: 0 14px 32px rgba(31,59,44,0.1); border-color: var(--wheat);
+    }
+
+    .widget-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .widget-title-group { display: flex; align-items: center; gap: 10px; }
+    .widget-icon { font-size: 1.5rem; }
+    .widget-title-group h4 { font-family: 'Fraunces', serif; font-size: 1.05rem; color: var(--forest); margin: 0; line-height: 1.2; }
+    .widget-sub { font-size: 0.74rem; color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; }
+
+    /* Fleet Widget Custom Styles */
+    .fleet-widget { background: #F4FBE4; }
+    
+    .fleet-segment-bar { display: flex; height: 12px; border-radius: 100px; overflow: hidden; margin: 10px 0; gap: 3px; }
+    .fleet-seg {
+      height: 100%; font-size: 0.65rem; color: #FFF; font-weight: 700; display: flex; align-items: center;
+      justify-content: center; overflow: hidden; white-space: nowrap; transition: all 0.3s ease;
+    }
+    .fleet-seg.active { background: #2E7D32; }
+    .fleet-seg.maintenance { background: #E74C3C; }
+    
+    .fleet-mini-tags { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.72rem; }
+    .f-tag { padding: 3px 10px; border-radius: 100px; font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+    .f-tag.active { background: rgba(46,125,50,0.12); color: #2E7D32; border: 1px solid rgba(46,125,50,0.25); }
+    .f-tag.service { background: rgba(231,76,60,0.12); color: #C0392B; border: 1px solid rgba(231,76,60,0.25); }
+
+    /* Crew Roster Widget Custom Styles */
+    .crew-widget { background: #E8F5E9; }
+    .crew-pill-grid { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+    .crew-pill {
+      display: flex; align-items: center; font-size: 0.8rem; color: var(--forest); background: rgba(255,255,255,0.7);
+      padding: 6px 12px; border-radius: 100px; border: 1px solid rgba(31,59,44,0.08); gap: 8px;
+    }
+    .c-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .c-dot.harvest { background: #2E7D32; }
+    .c-dot.irrig { background: #1976D2; }
+    .c-dot.pack { background: #F57F17; }
+
+    /* Hydro Reservoir Widget Custom Styles */
+    .hydro-widget { background: #EFEBE9; }
+    .hydro-stats-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .hydro-num { font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 700; color: var(--forest-dark); }
+    .hydro-unit { font-size: 0.85rem; color: var(--ink-soft); font-family: 'Inter', sans-serif; font-weight: 500; }
+    .hydro-status { font-size: 0.75rem; color: var(--ink-soft); font-weight: 600; }
+    .hydro-meter-track { width: 14px; height: 50px; background: rgba(31,59,44,0.12); border-radius: 100px; position: relative; overflow: hidden; }
+    .hydro-meter-fill { position: absolute; bottom: 0; width: 100%; background: #1976D2; border-radius: 100px; transition: height 1s ease; }
+
+    /* Soil Matrix Widget Custom Styles */
+    .soil-widget { background: #E3F2FD; }
+    .soil-temp-badge { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 700; color: var(--forest-dark); margin-bottom: 6px; }
+    .soil-temp-badge span { font-size: 0.75rem; font-family: 'Inter', sans-serif; color: var(--ink-soft); font-weight: 600; display: block; }
+    .npk-bars-mini { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; }
+    .npk-item { display: flex; align-items: center; gap: 6px; }
+    .npk-track { flex-grow: 1; height: 6px; background: rgba(31,59,44,0.12); border-radius: 100px; overflow: hidden; }
+    .npk-fill { height: 100%; background: #2E7D32; border-radius: 100px; }
+
+    /* Custom Agronomic Spraying & Machinery Entry Timeline List for Farm Manager */
+    .mgr-timeline-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+    .mgr-timeline-item {
+      display: flex; align-items: center; gap: 12px; background: var(--card-bg); padding: 12px 16px;
+      border-radius: 14px; border: 1px solid var(--line); box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+      transition: all 0.3s ease;
+    }
+    .mgr-timeline-item:hover { transform: translateX(4px); border-color: var(--wheat); }
+    .t-day-badge {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 700; color: var(--forest-dark);
+      background: rgba(31,59,44,0.08); padding: 4px 10px; border-radius: 8px; width: 44px; text-align: center;
+    }
+
+    /* Summary Cards Row for Customer View */
+    .summary-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; }
+    @media (max-width:1200px){ .summary-row { grid-template-columns:repeat(2, 1fr); } }
+    @media (max-width:600px){ .summary-row { grid-template-columns:1fr; } }
+
+    .stat-card {
+      background: #E8F5E9; border-radius: var(--border-radius); padding: 20px 22px;
+      display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(31,59,44,0.08);
+      box-shadow: 0 6px 20px rgba(31,59,44,0.04); transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      position:relative; overflow:hidden;
+    }
+    .stat-card:nth-child(2) { background: #F4FBE4; }
+    .stat-card:nth-child(3) { background: #EFEBE9; }
+    .stat-card:nth-child(4) { background: #E3F2FD; }
+
+    .stat-card:hover {
+      transform:translateY(-6px) scale(1.02); box-shadow:0 16px 36px rgba(31,59,44,0.12), 0 0 0 1px rgba(212,165,68,0.4);
+    }
+
+    .stat-info label { font-size:0.8rem; font-weight:600; color:var(--ink-soft); display:block; margin-bottom:4px; }
+    .stat-val-group { display:flex; align-items:baseline; gap:6px; }
+    .stat-val { font-family:'Fraunces', serif; font-size:1.8rem; font-weight:700; color:var(--forest-dark); }
+    .stat-unit { font-size:0.85rem; font-weight:600; color:var(--ink-soft); }
+
+    /* Circular Progress Ring */
+    .progress-ring-box { position:relative; width:60px; height:60px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .progress-ring-box svg { transform:rotate(-90deg); width:60px; height:60px; }
+    .progress-ring-bg { stroke: rgba(31,59,44,0.12); stroke-width:6; fill:none; }
+    .progress-ring-val { stroke: #2E7D32; stroke-width:6; stroke-dasharray: 163; stroke-linecap: round; fill:none; transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    .ring-text { position:absolute; font-family:'JetBrains Mono', monospace; font-size:0.72rem; font-weight:700; color:var(--forest-dark); }
+
+    /* Manage Your Farm Hero Banner Card */
+    .farm-banner-card {
+      position:relative; border-radius: var(--border-radius); overflow:hidden; height:230px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1); border:1px solid var(--line); transition:all 0.4s ease;
+    }
+    .farm-banner-card:hover { transform:translateY(-4px); box-shadow: 0 18px 45px rgba(0,0,0,0.18); border-color:var(--wheat); }
+    .farm-banner-img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.8s ease; }
+    .farm-banner-card:hover .farm-banner-img { transform:scale(1.06); }
+    .farm-banner-overlay {
+      position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(18,35,24,0.88) 100%);
+      padding:24px; display:flex; flex-direction:column; justify-content:space-between; color:var(--paper);
+    }
+    .banner-tags { display:flex; gap:10px; flex-wrap:wrap; }
+    .b-tag {
+      background:rgba(255,255,255,0.22); backdrop-filter:blur(8px); padding:5px 14px; border-radius:100px;
+      font-size:0.75rem; font-weight:600; font-family:'JetBrains Mono', monospace; letter-spacing:0.04em; transition:all 0.3s ease;
+    }
+    .b-tag:hover { background:var(--wheat); color:var(--forest-dark); }
+    .banner-bottom h3 { font-family:'Fraunces', serif; font-size:1.6rem; margin-bottom:6px; }
+    .banner-bottom p { font-size:0.9rem; color:rgba(252,250,243,0.88); }
+
+    /* Predictive Analysis Month Cards with Hover */
+    .predictive-row { display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; }
+    @media (max-width:700px){ .predictive-row { grid-template-columns:1fr; } }
+
+    .predict-card {
+      background: var(--card-bg); border-radius:18px; padding:20px 18px; border:1px solid var(--line);
+      box-shadow:0 6px 18px rgba(0,0,0,0.03); transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .predict-card:hover { transform:translateY(-6px) scale(1.02); box-shadow:0 16px 36px rgba(31,59,44,0.1); border-color:var(--wheat); }
+    .predict-month { font-family:'Fraunces', serif; font-weight:600; font-size:1.05rem; color:var(--forest); margin-bottom:14px; text-align:center; }
+
+    .bar-group { margin-bottom:10px; }
+    .bar-label { display:flex; justify-content:space-between; font-size:0.75rem; font-weight:600; color:var(--ink-soft); margin-bottom:4px; }
+    .bar-track { height:8px; background:#EEF2E6; border-radius:100px; overflow:hidden; }
+    .bar-fill { height:100%; border-radius:100px; transition:width 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+    .bar-fill.wheat { background:#2E7D32; }
+    .bar-fill.rice { background:#8BC34A; }
+    .bar-fill.maize { background:#FFB300; }
+
+    /* Field Sector Card WebP Photo Container */
+    .field-photo-card {
+      height: 140px; width: 100%; border-radius: 14px; overflow: hidden; margin-bottom: 12px; position: relative;
+    }
+    .field-photo-img {
+      width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;
+    }
+    .predict-card:hover .field-photo-img { transform: scale(1.08); }
+
+    /* Crop Allocation Multi-Color Progress Bar */
+    .crop-alloc-box {
+      background: var(--card-bg); border-radius: 18px; padding: 22px; border: 1px solid var(--line);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.03); margin-top: 10px;
+    }
+    .crop-alloc-bar {
+      display: flex; height: 14px; border-radius: 100px; overflow: hidden; margin: 14px 0; gap: 3px;
+    }
+    .crop-alloc-seg { height: 100%; transition: width 1s ease; position: relative; }
+    .crop-alloc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    @media (max-width: 700px) { .crop-alloc-grid { grid-template-columns: repeat(2, 1fr); } }
+    .crop-alloc-item { font-size: 0.8rem; }
+    .crop-alloc-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; }
+
+    /* Weather Forecast Widget Column */
+    .weather-today-card {
+      background: #DCE7CE; border-radius:var(--border-radius); padding:22px 24px;
+      display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(31,59,44,0.08);
+      box-shadow: 0 6px 20px rgba(31,59,44,0.04); transition:all 0.35s ease;
+    }
+    .weather-today-card:hover { transform:translateY(-5px); box-shadow:0 16px 36px rgba(31,59,44,0.12); border-color:var(--forest); }
+    .w-temp-group { display:flex; align-items:center; gap:14px; }
+    .w-icon-big { font-size:2.6rem; transition:transform 0.4s ease; }
+    .weather-today-card:hover .w-icon-big { transform:scale(1.15) rotate(8deg); }
+    .w-temp-val { font-family:'Fraunces', serif; font-size:2.2rem; font-weight:700; color:var(--forest-dark); }
+    .w-temp-unit { font-size:1.1rem; color:var(--ink-soft); font-weight:500; }
+    .w-status { font-size:0.82rem; color:var(--ink-soft); margin-top:2px; font-weight:600; }
+
+    /* 4-Day Forecast Grid */
+    .forecast-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .forecast-item {
+      background: var(--card-bg); border-radius:16px; padding:16px; text-align:center; border:1px solid var(--line);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.02); transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .forecast-item:hover { transform:translateY(-5px) scale(1.03); border-color:var(--wheat); box-shadow:0 12px 25px rgba(0,0,0,0.08); }
+    .f-date { font-size:0.75rem; font-weight:600; color:var(--ink-soft); margin-bottom:8px; font-family:'JetBrains Mono', monospace; }
+    .f-temp { font-family:'Fraunces', serif; font-size:1.6rem; font-weight:700; color:var(--forest); margin-bottom:4px; }
+    .f-desc { font-size:0.72rem; color:var(--ink-soft); }
+
+    /* Harvesting Cost Donut Card */
+    .cost-card {
+      background: #EAF4DD; border-radius:var(--border-radius); padding:24px; border:1px solid rgba(31,59,44,0.08);
+      box-shadow: 0 6px 20px rgba(31,59,44,0.04); transition:all 0.35s ease;
+    }
+    .cost-card:hover { transform:translateY(-5px); box-shadow:0 16px 36px rgba(31,59,44,0.12); border-color:var(--wheat); }
+    .cost-card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+    .cost-card-head h4 { font-family:'Fraunces', serif; font-size:1.15rem; color:var(--forest); }
+
+    .cost-body { display:flex; justify-content:space-between; align-items:center; gap:20px; }
+    .cost-list { display:flex; flex-direction:column; gap:8px; width:50%; }
+    .cost-row { display:flex; justify-content:space-between; font-size:0.85rem; }
+    .cost-lbl { color:var(--ink-soft); font-weight:500; }
+    .cost-val { font-weight:700; color:var(--forest); font-family:'JetBrains Mono', monospace; }
+
+    .cost-total { margin-top:12px; padding-top:10px; border-top:1px dashed rgba(31,59,44,0.15); }
+    .cost-total label { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); display:block; }
+    .cost-total-num { font-family:'Fraunces', serif; font-size:1.8rem; font-weight:700; color:var(--forest-dark); }
+
+    /* Donut Chart Canvas SVG */
+    .donut-chart-box { width:95px; height:95px; position:relative; flex-shrink:0; transition:transform 0.4s ease; }
+    .cost-card:hover .donut-chart-box { transform:scale(1.08) rotate(15deg); }
+    .donut-chart-box svg { width:100%; height:100%; transform:rotate(-90deg); }
+
+    /* Generic Card Box for Extra Tabs */
+    .content-card-box {
+      background:var(--card-bg); border-radius:var(--border-radius); padding:30px; border:1px solid var(--line);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.03); margin-bottom:24px; transition:all 0.35s ease;
+    }
+    .content-card-box:hover { box-shadow: 0 16px 40px rgba(31,59,44,0.08); border-color:rgba(212,165,68,0.3); }
+
+    /* Enhanced Table Styles with Hover Effect */
+    .table-custom { width:100%; border-collapse:collapse; margin-top:16px; }
+    .table-custom th, .table-custom td { padding:14px 16px; text-align:left; border-bottom:1px solid var(--line); font-size:0.9rem; transition:all 0.25s ease; }
+    .table-custom th { font-family:'JetBrains Mono', monospace; font-size:0.75rem; text-transform:uppercase; color:var(--ink-soft); background:#F9FAF6; }
+    .table-custom tr { transition:all 0.25s ease; }
+    .table-custom tr:hover { background:#EEF4E8; transform:scale(1.006); box-shadow:0 4px 15px rgba(31,59,44,0.05); }
+
+    .badge-status {
+      padding:5px 14px; border-radius:100px; font-size:0.75rem; font-weight:600; font-family:'JetBrains Mono', monospace;
+      display:inline-block; transition:all 0.3s ease;
+    }
+    .badge-status:hover { transform:scale(1.08); }
+    .badge-status.ready { background:#E8F5E9; color:#2E7D32; border:1px solid rgba(46,125,50,0.2); }
+    .badge-status.pending { background:#FFF8E1; color:#F57F17; border:1px solid rgba(245,127,23,0.2); }
+    .badge-status.active { background:#E3F2FD; color:#1565C0; border:1px solid rgba(21,101,192,0.2); }
+
+    /* 100% FULL VIEW OF ALL TEXTS ON MOBILE VIEW CSS */
+    *, *::before, *::after {
+      box-sizing: border-box !important;
+      max-width: 100% !important;
+    }
+    html, body {
+      max-width: 100vw !important;
+      width: 100vw !important;
+      overflow-x: hidden !important;
+      position: relative !important;
+      touch-action: pan-y !important;
+    }
+    .app-layout {
+      max-width: 100vw !important;
+      width: 100vw !important;
+      overflow-x: hidden !important;
+      box-sizing: border-box !important;
+      touch-action: pan-y !important;
+    }
+    .table-responsive-box {
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      margin-top: 10px !important;
+      margin-bottom: 10px !important;
+      border-radius: 12px !important;
+      box-sizing: border-box !important;
+      touch-action: pan-x pan-y !important;
+    }
+
+    @media (max-width: 1024px), html.is-mobile-viewport {
+      .app-layout { flex-direction: column !important; min-height: auto !important; width: 100vw !important; overflow-x: hidden !important; }
+      aside.sidebar {
+        width: 100% !important; height: auto !important; position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; z-index: 99999 !important;
+        background: var(--sidebar-bg) !important; padding: 10px 14px 6px 14px !important;
+        box-shadow: 0 6px 22px rgba(0,0,0,0.35) !important; border-bottom: 1px solid rgba(255,255,255,0.12) !important;
+        box-sizing: border-box !important; margin: 0 !important; max-width: 100vw !important; overflow-x: hidden !important;
+      }
+      .brand-header { margin-bottom: 6px !important; justify-content: space-between !important; align-items: center !important; width: 100% !important; }
+      .nav-list {
+        flex-direction: row !important; overflow-x: auto !important; padding-bottom: 4px !important; gap: 6px !important;
+        scrollbar-width: none !important; -webkit-overflow-scrolling: touch !important; touch-action: pan-x pan-y !important;
+      }
+      .nav-list::-webkit-scrollbar { display: none !important; }
+      .nav-item-btn { white-space: nowrap !important; padding: 8px 12px !important; font-size: 0.8rem !important; }
+      .sidebar-footer { display: block !important; padding-top: 6px !important; border-top: 1px solid rgba(255,255,255,0.08) !important; margin-top: 4px !important; width: 100% !important; }
+      main.main-content { padding: 12px 10px !important; margin-top: 195px !important; overflow-y: visible !important; overflow-x: hidden !important; width: 100% !important; max-width: 100vw !important; box-sizing: border-box !important; touch-action: pan-y !important; }
+      .top-bar { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; margin-top: 6px !important; margin-bottom: 14px !important; width: 100% !important; }
+      .top-left-title h1 { font-size: 1.25rem !important; line-height: 1.3 !important; word-wrap: break-word !important; overflow-wrap: break-word !important; white-space: normal !important; }
+      .top-right-group { width: 100% !important; justify-content: space-between !important; flex-wrap: wrap !important; }
+      .dash-grid { grid-template-columns: 1fr !important; gap: 16px !important; width: 100% !important; box-sizing: border-box !important; overflow-x: hidden !important; }
+      .mgr-top-matrix { grid-template-columns: 1fr !important; gap: 12px !important; margin-bottom: 20px !important; width: 100% !important; box-sizing: border-box !important; }
+    }
+
+    @media (max-width: 768px) {
+      /* Full View Text Wrapping for Section Titles */
+      .sec-header-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+        margin-top: 10px !important;
+        margin-bottom: 10px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+      .sec-title {
+        font-size: clamp(1rem, 4.2vw, 1.12rem) !important;
+        line-height: 1.35 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin-top: 6px !important;
+        margin-bottom: 6px !important;
+        clear: both !important;
+        color: var(--forest) !important;
+      }
+
+      /* Quick Action Buttons Grid - Full Text Visible */
+      .mgr-actions-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        margin-bottom: 14px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .mgr-btn {
+        flex: 1 1 calc(50% - 6px) !important;
+        max-width: calc(50% - 3px) !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 8px 6px !important;
+        font-size: 0.76rem !important;
+        line-height: 1.25 !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Widget Header & Card Containers - Full Text */
+      .widget-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+        margin-bottom: 10px !important;
+        width: 100% !important;
+      }
+      .widget-title-group h4 {
+        font-size: 1rem !important;
+        line-height: 1.3 !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+      }
+      .widget-sub {
+        font-size: 0.76rem !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+      }
+      .mgr-widget-card {
+        padding: 14px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 12px !important;
+      }
+
+      /* Full View for All Tags & Status Badges */
+      .banner-tags, .fleet-mini-tags {
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+        max-width: 100% !important;
+      }
+      .b-tag, .f-tag, .badge-status {
+        font-size: 0.68rem !important;
+        line-height: 1.3 !important;
+        padding: 4px 8px !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+        max-width: 100% !important;
+        display: inline-flex !important;
+        align-items: center !important;
+      }
+
+      /* Labor Roster */
+      .crew-pill {
+        padding: 6px 10px !important;
+        font-size: 0.78rem !important;
+        line-height: 1.3 !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        max-width: 100% !important;
+      }
+
+      /* Hydro Widget */
+      .hydro-stats-row {
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+      }
+      .hydro-num {
+        font-size: 1.4rem !important;
+      }
+
+      /* Hero Banner Card - Full Text View */
+      .farm-banner-card {
+        height: auto !important;
+        min-height: 220px !important;
+        margin-bottom: 20px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .farm-banner-overlay {
+        position: relative !important;
+        inset: auto !important;
+        height: auto !important;
+        padding: 14px !important;
+        background: linear-gradient(180deg, rgba(18,35,24,0.8) 0%, rgba(18,35,24,0.96) 100%) !important;
+        border-radius: var(--border-radius) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .farm-banner-img {
+        height: 140px !important;
+        object-fit: cover !important;
+        width: 100% !important;
+      }
+      .banner-bottom h3 {
+        font-size: 1.15rem !important;
+        line-height: 1.3 !important;
+        margin-bottom: 6px !important;
+        color: #FFFFFF !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+        white-space: normal !important;
+      }
+      .banner-bottom p {
+        font-size: 0.82rem !important;
+        line-height: 1.4 !important;
+        color: rgba(252,250,243,0.92) !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+      }
+
+      /* Crop Alloc & Predictive Cards - Full Text */
+      .crop-alloc-box {
+        padding: 14px !important;
+        margin-top: 8px !important;
+        margin-bottom: 18px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+      .crop-alloc-grid {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+        width: 100% !important;
+      }
+      .crop-alloc-item {
+        font-size: 0.8rem !important;
+        line-height: 1.35 !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+      }
+      .predictive-row {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+        width: 100% !important;
+      }
+      .predict-card {
+        padding: 14px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        margin-bottom: 14px !important;
+      }
+
+      /* Table Cell Full Text View Rules */
+      .table-custom {
+        width: 100% !important;
+        table-layout: auto !important;
+      }
+      .table-custom th, .table-custom td {
+        padding: 10px 12px !important;
+        font-size: 0.8rem !important;
+        line-height: 1.35 !important;
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        word-break: break-word !important;
+      }
+
+      .content-card-box {
+        padding: 14px !important;
+        border-radius: 14px !important;
+        margin-bottom: 18px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+      }
+    }
+
+</style>
+
+<style>
+
+/* ---------- Unique Stackly Agriculture Preloader Overlay ---------- */
+.stackly-preloader {
+  position: fixed; inset: 0; z-index: 999999;
+  background: rgba(18, 35, 24, 0.96); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: opacity 0.25s ease, visibility 0.25s ease;
+  pointer-events: none;
+}
+
+.stackly-preloader.active {
+  opacity: 1; visibility: visible; pointer-events: auto;
+}
+
+.preloader-content {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  padding: 40px 32px; border-radius: 28px; background: rgba(31, 59, 44, 0.5);
+  border: 1px solid rgba(212, 165, 68, 0.4); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.65);
+  max-width: 380px; width: 88%; transform: scale(0.92); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.stackly-preloader.active .preloader-content {
+  transform: scale(1);
+}
+
+.preloader-agri-symbol {
+  position: relative; width: 80px; height: 80px; display: flex; align-items: center;
+  justify-content: center; margin-bottom: 18px;
+}
+
+.agri-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 2px dashed rgba(212, 165, 68, 0.6);
+  border-top-color: #E9C876; border-right-color: #D4A544;
+  animation: agriRingSpin 1.2s linear infinite;
+}
+
+.agri-ring-outer {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px solid rgba(233, 200, 118, 0.25);
+  animation: agriPulseGlow 1.5s ease-in-out infinite alternate;
+}
+
+.agri-icon {
+  font-size: 2.5rem; filter: drop-shadow(0 0 14px rgba(212, 165, 68, 0.9));
+  animation: agriBounce 0.6s ease-in-out infinite alternate;
+}
+
+.preloader-logo-wrap {
+  margin-bottom: 22px;
+}
+
+.preloader-logo-img {
+  height: 44px; width: auto; object-fit: contain;
+  filter: drop-shadow(0 4px 18px rgba(212, 165, 68, 0.5));
+  animation: logoGlow 1.2s ease-in-out infinite alternate;
+}
+
+.preloader-track {
+  width: 100%; height: 5px; background: rgba(252, 250, 243, 0.14);
+  border-radius: 100px; overflow: hidden; margin-bottom: 16px; position: relative;
+}
+
+.preloader-fill {
+  height: 100%; width: 0%; border-radius: 100px;
+  background: linear-gradient(90deg, #D4A544, #FFF8DB, #E9C876);
+  box-shadow: 0 0 14px rgba(233, 200, 118, 0.95);
+  transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.preloader-subtext {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+  color: rgba(252, 250, 243, 0.78); letter-spacing: 0.16em; text-transform: uppercase;
+}
+
+@keyframes agriRingSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+@keyframes agriPulseGlow { 0% { transform: scale(0.95); opacity: 0.4; } 100% { transform: scale(1.08); opacity: 0.9; } }
+@keyframes agriBounce { 0% { transform: scale(0.92) translateY(0); } 100% { transform: scale(1.1) translateY(-5px); } }
+@keyframes logoGlow { 0% { opacity: 0.85; filter: drop-shadow(0 2px 8px rgba(212, 165, 68, 0.3)); } 100% { opacity: 1; filter: drop-shadow(0 6px 20px rgba(233, 200, 118, 0.9)); } }
+
+</style>
+</head>
+<body class="is-manager">
+
+  <div class="app-layout">
+    
+    <!-- Left Sidebar Navigation / Stable Header on Mobile View -->
+    <aside class="sidebar">
+      <div>
+        <div class="brand-header">
+          <a href="home.html" title="Back to Home" onclick="triggerLogoPreloader(event)">
+            <img src="logo_matching_light.webp" alt="Stackly Logo" class="brand-logo-img">
+          </a>
+        </div>
+
+        <ul class="nav-list" id="sidebarNavList">
+          <li>
+            <button class="nav-item-btn active" data-tab="dashboard" onclick="switchDashTab('dashboard', this)">
+              <span class="nav-icon">📊</span> <span class="tab-label-text">Farm Ops</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="analytics" onclick="switchDashTab('analytics', this)">
+              <span class="nav-icon">📈</span> <span class="tab-label-text">Yield Analytics</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="fields" onclick="switchDashTab('fields', this)">
+              <span class="nav-icon">🌱</span> <span class="tab-label-text">Field Blueprint</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="harvesting" onclick="switchDashTab('harvesting', this)">
+              <span class="nav-icon">🌾</span> <span class="tab-label-text">Harvest & Dispatch</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="finances" onclick="switchDashTab('finances', this)">
+              <span class="nav-icon">💰</span> <span class="tab-label-text">Revenue & Costs</span>
+            </button>
+          </li>
+          <li>
+            <button class="nav-item-btn" data-tab="weather" onclick="switchDashTab('weather', this)">
+              <span class="nav-icon">🌤️</span> <span class="tab-label-text">Field Weather</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-footer">
+        <a href="login.html" class="logout-btn">
+          <span class="nav-icon">🚪</span> Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Profile Bar -->
+      <div class="top-bar">
+        <div class="top-left-title">
+          <h1 class="sec-title role-manager-only" style="font-size:1.4rem;">Farm Operations Command</h1>
+          <h1 class="sec-title role-customer-only" style="font-size:1.4rem;">Member Account Dashboard</h1>
+        </div>
+
+        <div class="top-right-group">
+          <!-- User Profile Badge -->
+          <div class="user-profile-badge">
+            <img src="images/farm_img_086.webp" alt="Profile" class="avatar-img" id="profileAvatarImg">
+            <div class="user-info-text">
+              <div class="user-name" id="profileNameDisplay">Clara Vance</div>
+              <div class="user-role-tag" id="profileRoleTagDisplay">Farm Manager • Active</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TAB 1: MAIN DASHBOARD / FARM OPERATIONS VIEW -->
+      <!-- ============================================ -->
+      <div class="tab-view active" id="tabViewDashboard">
+        
+        <!-- Manager Quick Actions Row -->
+        <div class="mgr-actions-row role-manager-only" id="mgrActionsBar">
+          <button class="mgr-btn primary" onclick="location.href='404.html'"><span>➕</span> New Crop Batch</button>
+          <button class="mgr-btn" onclick="location.href='404.html'"><span>🚜</span> Fleet Dispatch</button>
+          <button class="mgr-btn" onclick="location.href='404.html'"><span>💧</span> Drip & Irrigation</button>
+          <button class="mgr-btn" onclick="location.href='404.html'"><span>🧪</span> Soil Lab Sample</button>
+          <button class="mgr-btn" onclick="location.href='404.html'"><span>🐝</span> Apiary Health</button>
+          <button class="mgr-btn" onclick="location.href='404.html'"><span>⚡</span> Solar Grid Export</button>
+          <button class="mgr-btn" onclick="location.href='404.html'"><span>📊</span> Yield Report</button>
+        </div>
+
+        <!-- Customer Quick Actions Row -->
+        <div class="mgr-actions-row role-customer-only" id="customerActionsBar">
+          <button class="mgr-btn primary" onclick="location.href='404.html'"><span>🛒</span> Order Extra Box</button>
+          <button class="mgr-btn" onclick="location.href='404.html'"><span>📦</span> Delivery Instructions</button>
+          <button class="mgr-btn" onclick="location.href='404.html'"><span>📜</span> View Recipes</button>
+          <button class="mgr-btn" onclick="location.href='404.html'"><span>💬</span> Contact Farm Team</button>
+        </div>
+
+        <div class="dash-grid">
+          
+          <!-- Left Column (Summary + Hero + Crop Alloc + Telemetry Matrix + Predictive Analysis) -->
+          <div class="grid-col">
+            
+            <!-- DYNAMIC ASYMMETRIC MANAGER TOP MATRIX (Farm Manager View - Real WebP Images < 100KB) -->
+            <div class="role-manager-only">
+              <div class="sec-header-row">
+                <h2 class="sec-title">Farm Operations Command & Telemetry</h2>
+                <span style="font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--forest); font-weight:600;">2026 HARVEST CYCLE • ACTIVE CONTROL</span>
+              </div>
+
+              <div class="mgr-top-matrix">
+                <!-- Widget 1: Heavy Equipment Fleet Monitor (Wide Fleet Progress Bar) -->
+                <div class="mgr-widget-card fleet-widget">
+                  <div class="widget-header">
+                    <div class="widget-title-group">
+                      <span class="widget-icon">🚜</span>
+                      <div>
+                        <h4>Equipment Fleet Monitor</h4>
+                        <span class="widget-sub">8 of 9 Units Active In Field</span>
+                      </div>
+                    </div>
+                    <span class="badge-status ready">88% Operational</span>
+                  </div>
+                  
+                  <div class="fleet-segment-bar">
+                    <div class="fleet-seg active" style="width: 35%;" title="John Deere Combine #2 (Field #1)">Combine #2</div>
+                    <div class="fleet-seg active" style="width: 25%;" title="Utility Tractor #1 (Field #2)">Tractor #1</div>
+                    <div class="fleet-seg active" style="width: 20%;" title="Skid Steer Loader #1 (Field #4)">Skid Steer #1</div>
+                    <div class="fleet-seg active" style="width: 8%;" title="Drip Pump #4 (Zone 4)">Pump #4</div>
+                    <div class="fleet-seg maintenance" style="width: 12%;" title="Harvester #3 (Service Shed)">Service #3</div>
+                  </div>
+                  
+                  <div class="fleet-mini-tags">
+                    <span class="f-tag active">🟢 Combine #2: Threshing Field 1</span>
+                    <span class="f-tag active">🟢 Tractor #1: Tillage Field 2</span>
+                    <span class="f-tag service">🛠️ Harvester #3: Oil Service</span>
+                  </div>
+                </div>
+
+                <!-- Widget 2: Field Labor Roster Pills -->
+                <div class="mgr-widget-card crew-widget">
+                  <div class="widget-header">
+                    <div class="widget-title-group">
+                      <span class="widget-icon">👷</span>
+                      <div>
+                        <h4>Labor Roster</h4>
+                        <span class="widget-sub">24 On-Site Workers</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="crew-pill-grid">
+                    <div class="crew-pill"><span class="c-dot harvest"></span><strong>12</strong> Harvest Crew</div>
+                    <div class="crew-pill"><span class="c-dot irrig"></span><strong>6</strong> Irrigation Techs</div>
+                    <div class="crew-pill"><span class="c-dot pack"></span><strong>6</strong> Packing Shed</div>
+                  </div>
+                </div>
+
+                <!-- Widget 3: Reservoir Flow Meter & Drip Telemetry -->
+                <div class="mgr-widget-card hydro-widget">
+                  <div class="widget-header">
+                    <div class="widget-title-group">
+                      <span class="widget-icon">💧</span>
+                      <div>
+                        <h4>Reservoir Drip Rate</h4>
+                        <span class="widget-sub">Zone 4 Main Reserve</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="hydro-stats-row">
+                    <div class="hydro-val-box">
+                      <div class="hydro-num">42.8 <span class="hydro-unit">GPM</span></div>
+                      <div class="hydro-status">85% Reservoir (1.2M Gal)</div>
+                    </div>
+                    <div class="hydro-meter-track" title="Reservoir 85% Capacity">
+                      <div class="hydro-meter-fill" style="height: 85%;"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Widget 4: Sub-Surface Soil Bio-Matrix -->
+                <div class="mgr-widget-card soil-widget">
+                  <div class="widget-header">
+                    <div class="widget-title-group">
+                      <span class="widget-icon">🌾</span>
+                      <div>
+                        <h4>Sub-Surface Soil</h4>
+                        <span class="widget-sub">NPK Sensor #4</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="soil-data-group">
+                    <div class="soil-temp-badge">62.4°F <span>62% Moisture</span></div>
+                    <div class="npk-bars-mini">
+                      <div class="npk-item"><span>N</span><div class="npk-track"><div class="npk-fill" style="width: 98%;"></div></div><span>98%</span></div>
+                      <div class="npk-item"><span>P</span><div class="npk-track"><div class="npk-fill" style="width: 84%;"></div></div><span>84%</span></div>
+                      <div class="npk-item"><span>K</span><div class="npk-track"><div class="npk-fill" style="width: 91%;"></div></div><span>91%</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Summary Row Cards (Customer Member View) -->
+            <div class="role-customer-only">
+              <div class="sec-header-row">
+                <h2 class="sec-title">My Farm Share Summary</h2>
+                <span style="font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--forest); font-weight:600;">ACTIVE CSA MEMBER</span>
+              </div>
+
+              <div class="summary-row">
+                <!-- Next Delivery -->
+                <div class="stat-card">
+                  <div class="stat-info">
+                    <label>Next Box Delivery</label>
+                    <div style="font-size:0.72rem; color:var(--ink-soft); margin-bottom:6px;">Thursday, Aug 14</div>
+                    <div class="stat-val-group">
+                      <span class="stat-val">Family</span>
+                      <span class="stat-unit">Share</span>
+                    </div>
+                  </div>
+                  <div class="progress-ring-box">
+                    <svg>
+                      <circle class="progress-ring-bg" cx="30" cy="30" r="24"></circle>
+                      <circle class="progress-ring-val" cx="30" cy="30" r="24" style="stroke-dashoffset: 163;"></circle>
+                    </svg>
+                    <span class="ring-text">100%</span>
+                  </div>
+                </div>
+
+                <!-- Loyalty Level -->
+                <div class="stat-card">
+                  <div class="stat-info">
+                    <label>Season Share Loyalty</label>
+                    <div style="font-size:0.72rem; color:var(--ink-soft); margin-bottom:6px;">2 Years Active Subscriber</div>
+                    <div class="stat-val-group">
+                      <span class="stat-val">Level 3</span>
+                    </div>
+                  </div>
+                  <div class="progress-ring-box">
+                    <svg>
+                      <circle class="progress-ring-bg" cx="30" cy="30" r="24"></circle>
+                      <circle class="progress-ring-val" cx="30" cy="30" r="24" style="stroke-dashoffset: 100;"></circle>
+                    </svg>
+                    <span class="ring-text">90%</span>
+                  </div>
+                </div>
+
+                <!-- Produce Varieties -->
+                <div class="stat-card">
+                  <div class="stat-info">
+                    <label>Fresh Produce Count</label>
+                    <div style="font-size:0.72rem; color:var(--ink-soft); margin-bottom:6px;">Heirlooms & Wild Honey</div>
+                    <div class="stat-val-group">
+                      <span class="stat-val">12</span>
+                      <span class="stat-unit">Varieties</span>
+                    </div>
+                  </div>
+                  <span style="font-size:2rem;">🧺</span>
+                </div>
+
+                <!-- Carbon Saved -->
+                <div class="stat-card">
+                  <div class="stat-info">
+                    <label>Farm Carbon Impact</label>
+                    <div style="font-size:0.72rem; color:var(--ink-soft); margin-bottom:6px;">Local Food Sourcing</div>
+                    <div class="stat-val-group">
+                      <span class="stat-val">-450</span>
+                      <span class="stat-unit">lbs CO₂</span>
+                    </div>
+                  </div>
+                  <span style="font-size:2rem;">🌱</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manage Your Farm Hero Card (Manager View - WebP Photo 57KB < 100KB) -->
+            <div class="role-manager-only">
+              <div class="sec-title" style="margin-bottom:12px;">Field Operations & Tactical Command Center</div>
+              <div class="farm-banner-card">
+                <img src="images/farm_img_070.webp" alt="Willow Valley Farm Tactical Fields" class="farm-banner-img">
+                <div class="farm-banner-overlay">
+                  <div class="banner-tags">
+                    <span class="b-tag">90 ACRES ACTIVE</span>
+                    <span class="b-tag">24 CREW ON-SITE</span>
+                    <span class="b-tag">SOLAR ARRAY 104%</span>
+                    <span class="b-tag" style="background:var(--pastel-lime); color:var(--forest-dark);">TACTICAL CONTROL</span>
+                  </div>
+                  <div class="banner-bottom">
+                    <h3>Willow Valley Tactical Farm Command Center</h3>
+                    <p>Field #1 Red Fife Wheat harvested today at 06:00 AM. Drone thermal imagery shows optimal soil hydration across all 4 zones. Solar array operating at 104% grid export.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manage Your Farm Hero Card (Customer View) -->
+            <div class="role-customer-only">
+              <div class="sec-title" style="margin-bottom:12px;">Your Organic Farm Experience</div>
+              <div class="farm-banner-card">
+                <img src="images/farm_img_076.webp" alt="Willow Valley Farm Fields" class="farm-banner-img">
+                <div class="farm-banner-overlay">
+                  <div class="banner-tags">
+                    <span class="b-tag">WEEKLY SHARE READY</span>
+                    <span class="b-tag">100% ORGANIC</span>
+                    <span class="b-tag">LOCAL DELIVERY</span>
+                  </div>
+                  <div class="banner-bottom">
+                    <h3>Welcome Back to Willow Valley Organic Farm!</h3>
+                    <p>Your weekly Harvest Box #14 is being hand-picked today! Fresh heirlooms, artisan sourdough, and wild honey await you this Thursday.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NEW VARIETY MODULE: Active Crop Distribution & Field Acreage Mix (Manager View) -->
+            <div class="role-manager-only">
+              <div class="sec-title" style="margin-bottom:10px;">Active Crop Acreage Allocation & Field Sector Distribution</div>
+              <div class="crop-alloc-box">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:0.85rem; font-weight:700; color:var(--forest);">90 Total Cultivated Acres</span>
+                  <span style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--ink-soft);">4 SECTORS ACTIVE</span>
+                </div>
+                <div class="crop-alloc-bar">
+                  <div class="crop-alloc-seg" style="width:33%; background:#2E7D32;" title="Heirloom Wheat 30A"></div>
+                  <div class="crop-alloc-seg" style="width:28%; background:#8BC34A;" title="Produce Garden 25A"></div>
+                  <div class="crop-alloc-seg" style="width:22%; background:#FFB300;" title="Apiary & Pasture 20A"></div>
+                  <div class="crop-alloc-seg" style="width:17%; background:#A6613A;" title="Solar Barn & Compost 15A"></div>
+                </div>
+                <div class="crop-alloc-grid">
+                  <div class="crop-alloc-item"><span class="crop-alloc-dot" style="background:#2E7D32;"></span><strong>Field #1 Wheat:</strong> 30A (33%)</div>
+                  <div class="crop-alloc-item"><span class="crop-alloc-dot" style="background:#8BC34A;"></span><strong>Field #2 Produce:</strong> 25A (28%)</div>
+                  <div class="crop-alloc-item"><span class="crop-alloc-dot" style="background:#FFB300;"></span><strong>Field #3 Apiary:</strong> 20A (22%)</div>
+                  <div class="crop-alloc-item"><span class="crop-alloc-dot" style="background:#A6613A;"></span><strong>Field #4 Solar:</strong> 15A (17%)</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NEW VARIETY MODULE: Live Field Sector Sensor Matrix (Manager View) -->
+            <div class="role-manager-only" style="margin-top:10px;">
+              <div class="sec-title" style="margin-bottom:10px;">Live Field Sector Telemetry & Equipment Matrix</div>
+              <div class="content-card-box" style="padding:20px; margin-bottom:0;">
+                <div class="table-responsive-box"><table class="table-custom" style="margin-top:0;">
+                  <thead>
+                    <tr>
+                      <th>Paddock Sector</th>
+                      <th>Moisture / Temp</th>
+                      <th>Soil NPK</th>
+                      <th>Assigned Equipment</th>
+                      <th>Sector Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Paddock #1 (North 30A)</strong></td>
+                      <td>62.4°F / 62%</td>
+                      <td>98% Fixed N</td>
+                      <td>Combine Harvester #2</td>
+                      <td><span class="badge-status ready">🟢 Active Threshing</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Paddock #2 (East 25A)</strong></td>
+                      <td>64.1°F / 68%</td>
+                      <td>95% High Abs</td>
+                      <td>Compact Tractor #1</td>
+                      <td><span class="badge-status ready">🟢 Daily Harvest</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Paddock #3 (Apiary 20A)</strong></td>
+                      <td>68.0°F / 55%</td>
+                      <td>100% Native</td>
+                      <td>Sensor Array #4</td>
+                      <td><span class="badge-status active">🔵 12 Active Hives</span></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Paddock #4 (Solar 15A)</strong></td>
+                      <td>145°F Core</td>
+                      <td>N:P 12:8 Org</td>
+                      <td>Skid Steer Loader</td>
+                      <td><span class="badge-status pending">🟡 104% Grid Export</span></td>
+                    </tr>
+                  </tbody>
+                </table></div>
+              </div>
+            </div>
+
+            <!-- Predictive Analysis Bar Charts (Customer View Only) -->
+            <div class="role-customer-only">
+              <div class="sec-title" style="margin-bottom:12px;">Seasonal Harvest Availability & U-Pick Calendar</div>
+              <div class="predictive-row">
+                <!-- January '26 -->
+                <div class="predict-card">
+                  <div class="predict-month">January '26</div>
+                  <div class="bar-group">
+                    <div class="bar-label"><span>Heirloom Grains</span><span>85%</span></div>
+                    <div class="bar-track"><div class="bar-fill wheat" style="width:85%;"></div></div>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-label"><span>Greenhouse Spinach</span><span>90%</span></div>
+                    <div class="bar-track"><div class="bar-fill rice" style="width:90%;"></div></div>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-label"><span>Wild Honeycomb</span><span>75%</span></div>
+                    <div class="bar-track"><div class="bar-fill maize" style="width:75%;"></div></div>
+                  </div>
+                </div>
+
+                <!-- February '26 -->
+                <div class="predict-card">
+                  <div class="predict-month">February '26</div>
+                  <div class="bar-group">
+                    <div class="bar-label"><span>Heirloom Grains</span><span>90%</span></div>
+                    <div class="bar-track"><div class="bar-fill wheat" style="width:90%;"></div></div>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-label"><span>Early Carrots</span><span>80%</span></div>
+                    <div class="bar-track"><div class="bar-fill rice" style="width:80%;"></div></div>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-label"><span>Wild Honeycomb</span><span>88%</span></div>
+                    <div class="bar-track"><div class="bar-fill maize" style="width:88%;"></div></div>
+                  </div>
+                </div>
+
+                <!-- March '26 -->
+                <div class="predict-card">
+                  <div class="predict-month">March '26</div>
+                  <div class="bar-group">
+                    <div class="bar-label"><span>Heirloom Grains</span><span>95%</span></div>
+                    <div class="bar-track"><div class="bar-fill wheat" style="width:95%;"></div></div>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-label"><span>Brandywine Tomatoes</span><span>98%</span></div>
+                    <div class="bar-track"><div class="bar-fill rice" style="width:98%;"></div></div>
+                  </div>
+                  <div class="bar-group">
+                    <div class="bar-label"><span>Spring Berries</span><span>65%</span></div>
+                    <div class="bar-track"><div class="bar-fill maize" style="width:65%;"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right Column (Weather Forecast + Harvesting Cost) -->
+          <div class="grid-col">
+            
+            <!-- Weather Radar & Today Card -->
+            <div>
+              <div class="sec-header-row">
+                <h3 class="sec-title role-manager-only">Field Telemetry Radar Station</h3>
+                <h3 class="sec-title role-customer-only">Local Farm Visit Weather</h3>
+                <a href="404.html" style="font-size:0.8rem; color:var(--forest); font-weight:700; text-decoration:none;">full report ↗</a>
+              </div>
+
+              <div class="weather-today-card">
+                <div>
+                  <div style="font-size:0.75rem; font-weight:600; color:var(--ink-soft); margin-bottom:2px; font-family:'JetBrains Mono', monospace;">WILLOW VALLEY STATION</div>
+                  <div class="w-temp-group">
+                    <span class="w-icon-big">🌤️</span>
+                    <div>
+                      <div class="w-temp-val">37° <span class="w-temp-unit">/ 23°</span></div>
+                      <div class="w-status">Rainy · Mild Humidity</div>
+                    </div>
+                  </div>
+                </div>
+                <span style="font-size:2.4rem;">🌡️</span>
+              </div>
+            </div>
+
+            <!-- Agronomic Timeline List for Farm Manager (NO REPETITIVE BOXES) -->
+            <div class="role-manager-only">
+              <div style="font-size:0.85rem; font-weight:700; color:var(--forest); margin-top:6px; margin-bottom:6px;">4-Day Agronomic Field Schedule</div>
+              <div class="mgr-timeline-list">
+                <div class="mgr-timeline-item">
+                  <div class="t-day-badge">MON</div>
+                  <div>
+                    <div style="font-size:0.85rem; font-weight:700; color:#C0392B;">🛑 Hold Spraying</div>
+                    <div style="font-size:0.75rem; color:var(--ink-soft);">Thunderstorm Risk 80% • Wind 18km/h</div>
+                  </div>
+                </div>
+
+                <div class="mgr-timeline-item">
+                  <div class="t-day-badge">TUE</div>
+                  <div>
+                    <div style="font-size:0.85rem; font-weight:700; color:#1976D2;">💧 Drip Irrig Only</div>
+                    <div style="font-size:0.75rem; color:var(--ink-soft);">Light Rain 40% • Soil Temp 64°F</div>
+                  </div>
+                </div>
+
+                <div class="mgr-timeline-item">
+                  <div class="t-day-badge">WED</div>
+                  <div>
+                    <div style="font-size:0.85rem; font-weight:700; color:#2E7D32;">✅ Prime Harvest Window</div>
+                    <div style="font-size:0.75rem; color:var(--ink-soft);">Clear Sun 39° • Ideal Threshing</div>
+                  </div>
+                </div>
+
+                <div class="mgr-timeline-item">
+                  <div class="t-day-badge">THU</div>
+                  <div>
+                    <div style="font-size:0.85rem; font-weight:700; color:#F57F17;">🌙 Night Irrig Run</div>
+                    <div style="font-size:0.75rem; color:var(--ink-soft);">High Heat 42° • Evapotranspiration High</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4-Day Forecast Grid for Customer View -->
+            <div class="forecast-grid role-customer-only">
+              <div class="forecast-item">
+                <div class="f-date">25 JUNE</div>
+                <div class="f-temp">29°</div>
+                <div class="f-desc">Thunderstorm</div>
+              </div>
+
+              <div class="forecast-item">
+                <div class="f-date">26 JUNE</div>
+                <div class="f-temp">32°</div>
+                <div class="f-desc">Rainy cloudy</div>
+              </div>
+
+              <div class="forecast-item">
+                <div class="f-date">27 JUNE</div>
+                <div class="f-temp">39°</div>
+                <div class="f-desc">Semicloudy</div>
+              </div>
+
+              <div class="forecast-item">
+                <div class="f-date">28 JUNE</div>
+                <div class="f-temp">42°</div>
+                <div class="f-desc">Sunny · Humidity</div>
+              </div>
+            </div>
+
+            <!-- Harvesting OpEx Progress Meter Card (Manager View) -->
+            <div class="cost-card role-manager-only" style="margin-top:10px;">
+              <div class="cost-card-head">
+                <h4>Operational Expenditure Budget</h4>
+                <span style="font-size:0.75rem; font-weight:600; color:var(--forest); font-family:'JetBrains Mono', monospace;">$160K TOTAL</span>
+              </div>
+
+              <div style="display:flex; flex-direction:column; gap:10px; margin-top:6px;">
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:600; color:var(--forest); margin-bottom:3px;">
+                    <span>Machinery Fleet Fuel</span><span>$38K / $45K</span>
+                  </div>
+                  <div class="bar-track"><div class="bar-fill wheat" style="width:84%;"></div></div>
+                </div>
+
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:600; color:var(--forest); margin-bottom:3px;">
+                    <span>Labor Shift Payroll</span><span>$65K / $70K</span>
+                  </div>
+                  <div class="bar-track"><div class="bar-fill rice" style="width:92%;"></div></div>
+                </div>
+
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:600; color:var(--forest); margin-bottom:3px;">
+                    <span>Soil & Seed Inputs</span><span>$35K / $40K</span>
+                  </div>
+                  <div class="bar-track"><div class="bar-fill maize" style="width:87%;"></div></div>
+                </div>
+
+                <div>
+                  <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:600; color:var(--forest); margin-bottom:3px;">
+                    <span>Equipment Maintenance</span><span>$22K / $25K</span>
+                  </div>
+                  <div class="bar-track"><div class="bar-fill wheat" style="width:88%;"></div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CSA Box Value Breakdown Card (Customer View) -->
+            <div class="cost-card role-customer-only">
+              <div class="cost-card-head">
+                <h4>Weekly CSA Share Value</h4>
+                <span style="font-size:0.75rem; font-weight:600; color:var(--forest); font-family:'JetBrains Mono', monospace;">INCLUDED</span>
+              </div>
+
+              <div class="cost-body">
+                <div class="cost-list">
+                  <div class="cost-row">
+                    <span class="cost-lbl">Heirloom Produce</span>
+                    <span class="cost-val">$45</span>
+                  </div>
+                  <div class="cost-row">
+                    <span class="cost-lbl">Artisan Bakery Box</span>
+                    <span class="cost-val">$25</span>
+                  </div>
+                  <div class="cost-row">
+                    <span class="cost-lbl">Wild Honeycomb</span>
+                    <span class="cost-val">$18</span>
+                  </div>
+                  <div class="cost-row">
+                    <span class="cost-lbl">Hen Eggs</span>
+                    <span class="cost-val">$12</span>
+                  </div>
+
+                  <div class="cost-total">
+                    <label>Total Weekly Box Value</label>
+                    <div class="cost-total-num">$100</div>
+                  </div>
+                </div>
+
+                <!-- SVG Donut Chart -->
+                <div class="donut-chart-box">
+                  <svg viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="#2E7D32" stroke-width="6" stroke-dasharray="76 24" stroke-dashoffset="0"></circle>
+                    <circle cx="18" cy="18" r="15.915" fill="none" stroke="#C0CA33" stroke-width="6" stroke-dasharray="24 76" stroke-dashoffset="-76"></circle>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TAB 2: ANALYTICS VIEW -->
+      <!-- ============================================ -->
+      <div class="tab-view" id="tabViewAnalytics">
+        <!-- Manager Analytics View -->
+        <div class="role-manager-only">
+          <div class="sec-header-row">
+            <h2 class="sec-title">Agronomy & Soil Science Telemetry</h2>
+            <button class="mgr-btn" onclick="location.href='404.html'">🔄 Sync Sensor Grid</button>
+          </div>
+
+          <div class="content-card-box">
+            <h3 style="font-family:'Fraunces',serif; color:var(--forest); margin-bottom:12px;">Sub-Surface Bio-Metrics & Carbon Sequestration Telemetry</h3>
+            <p style="color:var(--ink-soft); font-size:0.92rem; margin-bottom:20px;">Real-time soil sensor matrix across Field #1, #2, #3, and #4 measuring mycorrhizal fungal health, earthworm activity, and carbon sink capacity.</p>
+            
+            <div class="summary-row" style="margin-bottom:24px;">
+              <div class="stat-card">
+                <div>
+                  <label>Carbon Storage</label>
+                  <div class="stat-val">142 <span class="stat-unit">Tons CO₂/Yr</span></div>
+                </div>
+                <span style="font-size:2rem;">🌍</span>
+              </div>
+              <div class="stat-card">
+                <div>
+                  <label>Earthworm Bio-Density</label>
+                  <div class="stat-val">420+ <span class="stat-unit">/ m³ Soil</span></div>
+                </div>
+                <span style="font-size:2rem;">🪱</span>
+              </div>
+              <div class="stat-card">
+                <div>
+                  <label>Nitrogen Fixation</label>
+                  <div class="stat-val">98.4% <span class="stat-unit">Optimal</span></div>
+                </div>
+                <span style="font-size:2rem;">🌱</span>
+              </div>
+              <div class="stat-card">
+                <div>
+                  <label>Sub-surface Hydration</label>
+                  <div class="stat-val">62.4°F <span class="stat-unit">Uniform</span></div>
+                </div>
+                <span style="font-size:2rem;">💧</span>
+              </div>
+            </div>
+
+            <div class="table-responsive-box"><table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Field Zone ID</th>
+                  <th>Crop System</th>
+                  <th>Soil Temp / Moisture</th>
+                  <th>NPK Nitrogen Status</th>
+                  <th>Machinery Assigned</th>
+                  <th>Manager Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Field #1 (North 30A)</td>
+                  <td>Heirloom Red Fife Wheat</td>
+                  <td>62.4°F / 62% Moisture</td>
+                  <td>98% Nitrogen Fixed</td>
+                  <td>John Deere Combine #2</td>
+                  <td><button class="mgr-btn" onclick="location.href='404.html'">Inspect Field</button></td>
+                </tr>
+                <tr>
+                  <td>Field #2 (East 25A)</td>
+                  <td>Organic Market Garden</td>
+                  <td>64.1°F / 68% Moisture</td>
+                  <td>95% High Absorption</td>
+                  <td>Compact Utility Tractor #1</td>
+                  <td><button class="mgr-btn" onclick="location.href='404.html'">Assign Shift Crew</button></td>
+                </tr>
+                <tr>
+                  <td>Field #3 (Apiary 20A)</td>
+                  <td>Clover & Wild Honeycomb</td>
+                  <td>68.0°F / 55% Moisture</td>
+                  <td>100% Organic Native</td>
+                  <td>Telemetry Sensor Array #4</td>
+                  <td><button class="mgr-btn" onclick="location.href='404.html'">Check Hive Moisture</button></td>
+                </tr>
+                <tr>
+                  <td>Field #4 (South 15A)</td>
+                  <td>Compost & Solar Barn</td>
+                  <td>145°F Compost Core</td>
+                  <td>N:P 12:8 Organic</td>
+                  <td>Skid Steer Loader #1</td>
+                  <td><button class="mgr-btn" onclick="location.href='404.html'">Turn Windrows</button></td>
+                </tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <!-- Customer Analytics View -->
+        <div class="role-customer-only">
+          <div class="sec-header-row">
+            <h2 class="sec-title">Organic Farm Impact & Soil Health Certification</h2>
+            <button class="mgr-btn" onclick="location.href='404.html'">📜 Download Audit</button>
+          </div>
+
+          <div class="content-card-box">
+            <h3 style="font-family:'Fraunces',serif; color:var(--forest); margin-bottom:12px;">Environmental Impact & Pure Soil Certification</h3>
+            <p style="color:var(--ink-soft); font-size:0.92rem; margin-bottom:20px;">Every harvest box you receive directly funds regenerative organic practices, pesticide-free soil stewardship, and pollinator protection.</p>
+            
+            <div class="summary-row" style="margin-bottom:24px;">
+              <div class="stat-card">
+                <div>
+                  <label>Pesticides Avoided</label>
+                  <div class="stat-val">100% <span class="stat-unit">Pesticide Free</span></div>
+                </div>
+                <span style="font-size:2rem;">🛡️</span>
+              </div>
+              <div class="stat-card">
+                <div>
+                  <label>Local Food Mileage</label>
+                  <div class="stat-val">0.2 <span class="stat-unit">Miles Radius</span></div>
+                </div>
+                <span style="font-size:2rem;">🚚</span>
+              </div>
+              <div class="stat-card">
+                <div>
+                  <label>Wild Bee Support</label>
+                  <div class="stat-val">12 <span class="stat-unit">Active Hives</span></div>
+                </div>
+                <span style="font-size:2rem;">🐝</span>
+              </div>
+              <div class="stat-card">
+                <div>
+                  <label>Organic Soil Score</label>
+                  <div class="stat-val">99.2/100</div>
+                </div>
+                <span style="font-size:2rem;">🌟</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TAB 3: FIELDS VIEW (REAL WEBP IMAGES < 100KB) -->
+      <!-- ============================================ -->
+      <div class="tab-view" id="tabViewFields">
+        <!-- Manager Fields View -->
+        <div class="role-manager-only">
+          <div class="sec-header-row">
+            <h2 class="sec-title">90-Acre Tactical Field Operations & Machinery Blueprint</h2>
+            <button class="mgr-btn primary" onclick="location.href='404.html'">🗺️ Open GIS Command Map</button>
+          </div>
+
+          <div class="predictive-row">
+            <div class="predict-card" style="text-align:left;">
+              <div class="field-photo-card">
+                <img src="images/farm_img_065.webp" alt="Field 1 Red Fife Wheat" class="field-photo-img">
+              </div>
+              <h3 style="font-family:'Fraunces',serif; font-size:1.2rem; color:var(--forest); margin-bottom:4px;">Field #1 — Heritage Grain Paddock (30A)</h3>
+              <p style="font-size:0.85rem; color:var(--ink-soft); margin-bottom:12px;">Seeded with heirloom Red Fife wheat. Assigned: John Deere Combine #2 & Drip Line #1.</p>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="badge-status ready">Active Threshing</span>
+                <button class="mgr-btn" onclick="location.href='404.html'">Schedule Dryer</button>
+              </div>
+            </div>
+
+            <div class="predict-card" style="text-align:left;">
+              <div class="field-photo-card">
+                <img src="images/farm_img_055.webp" alt="Field 2 Organic Produce" class="field-photo-img">
+              </div>
+              <h3 style="font-family:'Fraunces',serif; font-size:1.2rem; color:var(--forest); margin-bottom:4px;">Field #2 — Organic Produce Garden (25A)</h3>
+              <p style="font-size:0.85rem; color:var(--ink-soft); margin-bottom:12px;">Brandywine tomatoes & spinach. Assigned: Utility Tractor #1 & Micro-Sprinklers.</p>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="badge-status ready">Harvesting Daily</span>
+                <button class="mgr-btn" onclick="location.href='404.html'">Dispatch Crew</button>
+              </div>
+            </div>
+
+            <div class="predict-card" style="text-align:left;">
+              <div class="field-photo-card">
+                <img src="images/farm_img_050.webp" alt="Field 3 Apiary Pasture" class="field-photo-img">
+              </div>
+              <h3 style="font-family:'Fraunces',serif; font-size:1.2rem; color:var(--forest); margin-bottom:4px;">Field #3 — Wild Apiary & Clover Pasture (20A)</h3>
+              <p style="font-size:0.85rem; color:var(--ink-soft); margin-bottom:12px;">Clover buffer with 12 wild hives. Assigned: Telemetry Sensor Array #4 & Solar Fans.</p>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="badge-status active">Active Pollination</span>
+                <button class="mgr-btn" onclick="location.href='404.html'">Calibrate Hive</button>
+              </div>
+            </div>
+
+            <div class="predict-card" style="text-align:left;">
+              <div class="field-photo-card">
+                <img src="images/farm_img_040.webp" alt="Field 4 Solar Barn" class="field-photo-img">
+              </div>
+              <h3 style="font-family:'Fraunces',serif; font-size:1.2rem; color:var(--forest); margin-bottom:4px;">Field #4 — Solar Barn & Compost Facility (15A)</h3>
+              <p style="font-size:0.85rem; color:var(--ink-soft); margin-bottom:12px;">48kW Solar Roof Array & Organic Compost. Assigned: Skid Steer Loader #1.</p>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="badge-status ready">Solar 104% Grid</span>
+                <button class="mgr-btn" onclick="location.href='404.html'">Log Export</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Fields View -->
+        <div class="role-customer-only">
+          <div class="sec-header-row">
+            <h2 class="sec-title">Explore Our 90-Acre Organic Farm</h2>
+            <button class="mgr-btn primary" onclick="location.href='404.html'">📍 Schedule U-Pick Visit</button>
+          </div>
+
+          <div class="predictive-row">
+            <div class="predict-card" style="text-align:left;">
+              <div class="field-photo-card">
+                <img src="images/farm_img_065.webp" alt="Field 1 Wheat" class="field-photo-img">
+              </div>
+              <h3 style="font-family:'Fraunces',serif; font-size:1.2rem; color:var(--forest); margin-bottom:4px;">Field #1 — Heritage Wheat Fields</h3>
+              <p style="font-size:0.85rem; color:var(--ink-soft); margin-bottom:12px;">Golden heirloom wheat harvested and stone-ground locally for your fresh sourdough.</p>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="badge-status ready">Harvesting Now</span>
+              </div>
+            </div>
+
+            <div class="predict-card" style="text-align:left;">
+              <div class="field-photo-card">
+                <img src="images/farm_img_055.webp" alt="Field 2 Organic Produce" class="field-photo-img">
+              </div>
+              <h3 style="font-family:'Fraunces',serif; font-size:1.2rem; color:var(--forest); margin-bottom:4px;">Field #2 — U-Pick Organic Berry Garden</h3>
+              <p style="font-size:0.85rem; color:var(--ink-soft); margin-bottom:12px;">Fresh strawberries, raspberries, and Brandywine tomatoes open for member picking!</p>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="badge-status ready">U-Pick Open</span>
+              </div>
+            </div>
+
+            <div class="predict-card" style="text-align:left;">
+              <div class="field-photo-card">
+                <img src="images/farm_img_050.webp" alt="Field 3 Apiary" class="field-photo-img">
+              </div>
+              <h3 style="font-family:'Fraunces',serif; font-size:1.2rem; color:var(--forest); margin-bottom:4px;">Field #3 — Wild Apiary & Bee Sanctuary</h3>
+              <p style="font-size:0.85rem; color:var(--ink-soft); margin-bottom:12px;">Home to 12 thriving hives producing the raw honeycomb included in your box.</p>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span class="badge-status active">Bee Sanctuary</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TAB 4: HARVESTING VIEW -->
+      <!-- ============================================ -->
+      <div class="tab-view" id="tabViewHarvesting">
+        <!-- Manager Harvesting View -->
+        <div class="role-manager-only">
+          <div class="sec-header-row">
+            <h2 class="sec-title">Morning Harvest Batch Log & Fleet Dispatch Center</h2>
+            <button class="mgr-btn primary" onclick="location.href='404.html'">🖨️ Print Dispatch Manifest</button>
+          </div>
+
+          <div class="content-card-box">
+            <div class="table-responsive-box"><table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Dispatch Batch ID</th>
+                  <th>Truck Route & Destination</th>
+                  <th>QC Organic Grade</th>
+                  <th>Batch Weight (Tons)</th>
+                  <th>Fleet Van Status</th>
+                  <th>Supervisor Sign-Off</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#STK-2026-089</td>
+                  <td>Route #1 (Salem HQ & Retail Hub)</td>
+                  <td>AAA Organic Certified</td>
+                  <td>4.2 Tons (Wheat & Produce)</td>
+                  <td><span class="badge-status ready">Dispatched 08:30 AM</span></td>
+                  <td><button class="mgr-btn" onclick="location.href='404.html'">Approved ✓</button></td>
+                </tr>
+                <tr>
+                  <td>#STK-2026-090</td>
+                  <td>Route #2 (Market Co-Op Wholesale)</td>
+                  <td>AAA Grade Heirloom</td>
+                  <td>2.8 Tons (Eggs & Honey)</td>
+                  <td><span class="badge-status pending">In Packing Shed</span></td>
+                  <td><button class="mgr-btn primary" onclick="location.href='404.html'">Dispatch Now</button></td>
+                </tr>
+                <tr>
+                  <td>#STK-2026-091</td>
+                  <td>Route #3 (Artisan Bakery Network)</td>
+                  <td>AAA Organic Certified</td>
+                  <td>1.5 Tons (Heritage Flour)</td>
+                  <td><span class="badge-status ready">Dispatched 09:15 AM</span></td>
+                  <td><button class="mgr-btn" onclick="location.href='404.html'">Approved ✓</button></td>
+                </tr>
+                <tr>
+                  <td>#STK-2026-092</td>
+                  <td>Route #4 (Regional Organic Dist)</td>
+                  <td>AAA Premium Grade</td>
+                  <td>5.8 Tons (Root Vegetables)</td>
+                  <td><span class="badge-status pending">Staged in Cold Storage</span></td>
+                  <td><button class="mgr-btn primary" onclick="location.href='404.html'">Sign Manifest</button></td>
+                </tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <!-- Customer Harvesting View -->
+        <div class="role-customer-only">
+          <div class="sec-header-row">
+            <h2 class="sec-title">My Harvest Box Delivery Tracker</h2>
+            <button class="mgr-btn primary" onclick="location.href='404.html'">📦 Track Van Location</button>
+          </div>
+
+          <div class="content-card-box">
+            <div class="table-responsive-box"><table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Delivery Location</th>
+                  <th>Box Share Type</th>
+                  <th>Fresh Harvest Items</th>
+                  <th>Delivery Status</th>
+                  <th>Packing Slip</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>#STK-2026-089</td>
+                  <td>Home Delivery (Salem)</td>
+                  <td>Family Share Box</td>
+                  <td>Tomatoes, Red Fife Flour, Wild Honey</td>
+                  <td><span class="badge-status ready">Out for Delivery</span></td>
+                  <td><a href="404.html" style="color:var(--forest); font-weight:700;">View Slip ↓</a></td>
+                </tr>
+                <tr>
+                  <td>#STK-2026-075</td>
+                  <td>Farm Stand Pickup</td>
+                  <td>Weekly Produce Share</td>
+                  <td>Eggs, Carrots, Baby Spinach</td>
+                  <td><span class="badge-status active">Picked Up Aug 07</span></td>
+                  <td><a href="404.html" style="color:var(--forest); font-weight:700;">View Slip ↓</a></td>
+                </tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TAB 5: FINANCES VIEW -->
+      <!-- ============================================ -->
+      <div class="tab-view" id="tabViewFinances">
+        <!-- Manager Finances View -->
+        <div class="role-manager-only">
+          <div class="sec-header-row">
+            <h2 class="sec-title">Farm Revenue & Operational Expenditure General Ledger</h2>
+            <button class="mgr-btn primary" onclick="location.href='404.html'">📥 Export General Ledger</button>
+          </div>
+
+          <div class="summary-row" style="margin-bottom:24px;">
+            <div class="stat-card">
+              <div>
+                <label>Operational OpEx</label>
+                <div class="stat-val">$160,000</div>
+              </div>
+              <span style="font-size:2rem;">💵</span>
+            </div>
+            <div class="stat-card">
+              <div>
+                <label>Wholesale & CSA Sales</label>
+                <div class="stat-val">$412,000</div>
+              </div>
+              <span style="font-size:2rem;">📈</span>
+            </div>
+            <div class="stat-card">
+              <div>
+                <label>Net Operating Income</label>
+                <div class="stat-val">$252,000</div>
+              </div>
+              <span style="font-size:2rem;">✨</span>
+            </div>
+            <div class="stat-card">
+              <div>
+                <label>Operating Margin</label>
+                <div class="stat-val">61.1%</div>
+              </div>
+              <span style="font-size:2rem;">📊</span>
+            </div>
+          </div>
+
+          <div class="content-card-box">
+            <h3 style="font-family:'Fraunces',serif; color:var(--forest); margin-bottom:12px;">Operating Ledger & Vendor Invoices</h3>
+            <div class="table-responsive-box"><table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Invoice Date</th>
+                  <th>Vendor & Category Description</th>
+                  <th>Transaction Amount</th>
+                  <th>Manager Invoice Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Aug 01, 2026</td>
+                  <td>John Deere Machinery Fleet Solar Diesel Fuel #402</td>
+                  <td>$3,850.00</td>
+                  <td><a href="404.html" style="color:var(--forest); font-weight:700;">Download Invoice ↓</a></td>
+                </tr>
+                <tr>
+                  <td>Jul 28, 2026</td>
+                  <td>Field #1 Soil Bio-Amendments & Cover Seeds</td>
+                  <td>$1,420.00</td>
+                  <td><a href="404.html" style="color:var(--forest); font-weight:700;">Download Invoice ↓</a></td>
+                </tr>
+                <tr>
+                  <td>Jul 15, 2026</td>
+                  <td>Irrigation Drip Line Replacement & Solar Pump Service</td>
+                  <td>$2,180.00</td>
+                  <td><a href="404.html" style="color:var(--forest); font-weight:700;">Download Invoice ↓</a></td>
+                </tr>
+                <tr>
+                  <td>Jul 02, 2026</td>
+                  <td>Seasonal Farm Labor Shift Payroll (Period #14)</td>
+                  <td>$16,500.00</td>
+                  <td><a href="404.html" style="color:var(--forest); font-weight:700;">Download Invoice ↓</a></td>
+                </tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+
+        <!-- Customer Finances View -->
+        <div class="role-customer-only">
+          <div class="sec-header-row">
+            <h2 class="sec-title">My CSA Subscription & Payment History</h2>
+            <button class="mgr-btn primary" onclick="location.href='404.html'">💳 Manage Payment Method</button>
+          </div>
+
+          <div class="summary-row" style="margin-bottom:24px;">
+            <div class="stat-card">
+              <div>
+                <label>Annual Season Pass</label>
+                <div class="stat-val">$1,200</div>
+              </div>
+              <span style="font-size:2rem;">🎫</span>
+            </div>
+            <div class="stat-card">
+              <div>
+                <label>Boxes Received</label>
+                <div class="stat-val">18 <span class="stat-unit">Boxes</span></div>
+              </div>
+              <span style="font-size:2rem;">📦</span>
+            </div>
+            <div class="stat-card">
+              <div>
+                <label>Member Rewards</label>
+                <div class="stat-val">$45 <span class="stat-unit">Credit</span></div>
+              </div>
+              <span style="font-size:2rem;">⭐</span>
+            </div>
+            <div class="stat-card">
+              <div>
+                <label>Subscription Status</label>
+                <div class="stat-val">Active</div>
+              </div>
+              <span style="font-size:2rem;">✨</span>
+            </div>
+          </div>
+
+          <div class="content-card-box">
+            <h3 style="font-family:'Fraunces',serif; color:var(--forest); margin-bottom:12px;">Recent Subscription Statements</h3>
+            <div class="table-responsive-box"><table class="table-custom">
+              <thead>
+                <tr>
+                  <th>Billing Date</th>
+                  <th>Statement Description</th>
+                  <th>Amount</th>
+                  <th>Receipt</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Aug 01, 2026</td>
+                  <td>Monthly CSA Shareholder Subscription Renewal</td>
+                  <td>$100.00</td>
+                  <td><a href="404.html" style="color:var(--forest); font-weight:700;">Download Receipt ↓</a></td>
+                </tr>
+                <tr>
+                  <td>Jul 01, 2026</td>
+                  <td>Monthly CSA Shareholder Subscription Renewal</td>
+                  <td>$100.00</td>
+                  <td><a href="404.html" style="color:var(--forest); font-weight:700;">Download Receipt ↓</a></td>
+                </tr>
+              </tbody>
+            </table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+      <!-- TAB 6: WEATHER VIEW -->
+      <!-- ============================================ -->
+      <div class="tab-view" id="tabViewWeather">
+        <!-- Manager Weather View -->
+        <div class="role-manager-only">
+          <div class="sec-header-row">
+            <h2 class="sec-title">Station #1 Weather Telemetry & Agronomic Spraying Window</h2>
+            <button class="mgr-btn" onclick="location.href='404.html'">📡 Sync Radar</button>
+          </div>
+
+          <div class="dash-grid">
+            <div class="weather-today-card" style="padding:32px;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--ink-soft); margin-bottom:6px;">WILLOW VALLEY STATION #1 · REAL-TIME TELEMETRY</div>
+                <div class="w-temp-val" style="font-size:3.2rem;">37°C <span class="w-temp-unit">/ 23°C</span></div>
+                <div class="w-status" style="font-size:0.95rem; margin-top:8px;">Mild Light Rain · Wind 8 km/h NW · Humidity 64%</div>
+                <div style="margin-top:14px; font-size:0.82rem; font-family:'JetBrains Mono',monospace; color:var(--forest); background:rgba(212,165,68,0.2); padding:8px 14px; border-radius:100px; display:inline-block; border:1px solid #D4A544;">
+                  Dew Point: 18.5°C | Evapotranspiration ET0: 4.2 mm/day
+                </div>
+                <div style="margin-top:10px; font-size:0.82rem; font-weight:700; color:#2E7D32;">
+                  ✓ GREEN FLAG — Optimal Spraying & Field Machinery Entry Window
+                </div>
+              </div>
+              <span style="font-size:4rem;">🌤️</span>
+            </div>
+
+            <div class="forecast-grid">
+              <div class="forecast-item"><div class="f-date">MON</div><div class="f-temp">29°</div><div class="f-desc">Thunderstorm Risk 80%</div><div class="badge-status pending" style="margin-top:6px;">Hold Spraying</div></div>
+              <div class="forecast-item"><div class="f-date">TUE</div><div class="f-temp">32°</div><div class="f-desc">Light Rain 40%</div><div class="badge-status active" style="margin-top:6px;">Drip Irrig Only</div></div>
+              <div class="forecast-item"><div class="f-date">WED</div><div class="f-temp">39°</div><div class="f-desc">Mild Sun</div><div class="badge-status ready" style="margin-top:6px;">Harvest Window</div></div>
+              <div class="forecast-item"><div class="f-date">THU</div><div class="f-temp">42°</div><div class="f-desc">High Heat</div><div class="badge-status active" style="margin-top:6px;">Night Irrig Run</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Weather View -->
+        <div class="role-customer-only">
+          <div class="sec-header-row">
+            <h2 class="sec-title">Local Farm Visit & U-Pick Garden Weather</h2>
+            <button class="mgr-btn" onclick="location.href='404.html'">📡 Sync Forecast</button>
+          </div>
+
+          <div class="dash-grid">
+            <div class="weather-today-card" style="padding:32px;">
+              <div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:var(--ink-soft); margin-bottom:6px;">WILLOW VALLEY FARM VISIT WEATHER</div>
+                <div class="w-temp-val" style="font-size:3.2rem;">37°C <span class="w-temp-unit">/ 23°C</span></div>
+                <div class="w-status" style="font-size:1rem; margin-top:8px;">Mild Breeze · Ideal U-Pick Visiting Weather</div>
+              </div>
+              <span style="font-size:4rem;">🌤️</span>
+            </div>
+
+            <div class="forecast-grid">
+              <div class="forecast-item"><div class="f-date">MON</div><div class="f-temp">29°</div><div class="f-desc">Thunderstorm</div></div>
+              <div class="forecast-item"><div class="f-date">TUE</div><div class="f-temp">32°</div><div class="f-desc">Rainy</div></div>
+              <div class="forecast-item"><div class="f-date">WED</div><div class="f-temp">39°</div><div class="f-desc">Semicloudy</div></div>
+              <div class="forecast-item"><div class="f-date">THU</div><div class="f-temp">42°</div><div class="f-desc">Sunny U-Pick Day</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================ -->
+
+    </main>
+
+  </div>
+
+  <script>
+    // Manager vs. Customer Role Mode state
+    var currentRole = 'manager';
+    var loggedInEmail = '';
+    var loggedInName = '';
+
+    var managerTabNames = ['Farm Ops', 'Yield Analytics', 'Field Blueprint', 'Harvest & Dispatch', 'Revenue & Costs', 'Field Weather'];
+    var customerTabNames = ['Dashboard', 'Analytics', 'Fields', 'Harvesting', 'Finances', 'Weather'];
+
+    // Switch Role Mode Function
+    function setDashboardRole(role) {
+      currentRole = role;
+
+      // Update Local Storage
+      try {
+        var userObj = JSON.parse(localStorage.getItem('stacklyUser') || '{}');
+        userObj.role = role;
+        userObj.name = role === 'manager' ? (loggedInName || 'Clara Vance') : (loggedInName || 'Sarah Jenkins');
+        localStorage.setItem('stacklyUser', JSON.stringify(userObj));
+      } catch(e) {}
+
+      // Toggle Body Role Class
+      document.body.classList.remove('is-manager', 'is-customer');
+      document.body.classList.add(role === 'manager' ? 'is-manager' : 'is-customer');
+
+      // Update Switcher Pill Buttons
+      var pillMgr = document.getElementById('pillManagerBtn');
+      var pillCust = document.getElementById('pillCustomerBtn');
+      if (pillMgr) pillMgr.classList.toggle('active', role === 'manager');
+      if (pillCust) pillCust.classList.toggle('active', role === 'customer');
+
+      // Profile Badge UI
+      var profileNameEl = document.getElementById('profileNameDisplay');
+      var profileRoleEl = document.getElementById('profileRoleTagDisplay');
+      var profileAvatarImg = document.getElementById('profileAvatarImg');
+
+      if (role === 'manager') {
+        if (profileNameEl) profileNameEl.textContent = loggedInEmail || 'Clara Vance';
+        if (profileRoleEl) profileRoleEl.textContent = 'Farm Manager • Active';
+        if (profileAvatarImg) profileAvatarImg.src = 'images/farm_img_086.webp';
+      } else {
+        if (profileNameEl) profileNameEl.textContent = (loggedInEmail && loggedInEmail !== 'manager@stackly.com') ? loggedInEmail : 'Sarah Jenkins';
+        if (profileRoleEl) profileRoleEl.textContent = 'Customer Member • Active';
+        if (profileAvatarImg) profileAvatarImg.src = 'images/farm_img_015.webp';
+      }
+
+      // Update Nav Tab labels
+      var navBtns = document.querySelectorAll('#sidebarNavList .tab-label-text');
+      navBtns.forEach(function(el, i) {
+        if (role === 'manager' && managerTabNames[i]) el.textContent = managerTabNames[i];
+        if (role === 'customer' && customerTabNames[i]) el.textContent = customerTabNames[i];
+      });
+    }
+
+    // Tab Switcher JS with smooth active class toggling and session tab memory
+    function switchDashTab(tabId, btn) {
+      if (!tabId) tabId = 'dashboard';
+
+      // Store current active tab ID in session storage and location hash
+      try {
+        sessionStorage.setItem('stacklyActiveTab', tabId);
+        var cleanUrl = window.location.protocol + '//' + window.location.host + window.location.pathname + '#' + tabId;
+        sessionStorage.setItem('stacklyBackTo', cleanUrl);
+        if (history.replaceState) {
+          history.replaceState(null, null, '#' + tabId);
+        }
+      } catch(e) {}
+
+      // If btn is not supplied directly, find it by data-tab
+      if (!btn) {
+        btn = document.querySelector('#sidebarNavList .nav-item-btn[data-tab="' + tabId + '"]');
+      }
+
+      document.querySelectorAll('.nav-item-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+
+      document.querySelectorAll('.tab-view').forEach(v => v.classList.remove('active'));
+
+      const targetMap = {
+        'dashboard': 'tabViewDashboard',
+        'analytics': 'tabViewAnalytics',
+        'fields': 'tabViewFields',
+        'harvesting': 'tabViewHarvesting',
+        'finances': 'tabViewFinances',
+        'weather': 'tabViewWeather'
+      };
+
+      const targetId = targetMap[tabId] || 'tabViewDashboard';
+      const viewEl = document.getElementById(targetId);
+      if (viewEl) viewEl.classList.add('active');
+    }
+
+    // Load logged-in user into the profile badge & initialize role and tab
+    (function initDashboard() {
+      var stored = null;
+      try { stored = JSON.parse(localStorage.getItem('stacklyUser') || 'null'); } catch (e) {}
+
+      if (stored) {
+        if (stored.email) loggedInEmail = stored.email;
+        if (stored.name) loggedInName = stored.name;
+      }
+
+      if (stored && stored.role === 'customer') {
+        setDashboardRole('customer');
+      } else {
+        setDashboardRole('manager');
+      }
+
+      // Restore active tab from URL hash or sessionStorage
+      var hashTab = (window.location.hash || '').replace('#', '');
+      var savedTab = hashTab || (function(){ try { return sessionStorage.getItem('stacklyActiveTab'); } catch(e){} return ''; })() || 'dashboard';
+      switchDashTab(savedTab);
+    })();
+
+  </script>
+
+
+<!-- Unique Stackly Agriculture Preloader Overlay -->
+<div class="stackly-preloader" id="stacklyPreloader" aria-hidden="true">
+  <div class="preloader-content">
+    <div class="preloader-agri-symbol">
+      <div class="agri-ring"></div>
+      <div class="agri-ring-outer"></div>
+      <span class="agri-icon">🌾</span>
+    </div>
+    
+    <div class="preloader-logo-wrap">
+      <img src="logo_matching_light.webp" alt="Stackly Logo" class="preloader-logo-img">
+    </div>
+    
+    <div class="preloader-track">
+      <div class="preloader-fill" id="preloaderFill"></div>
+    </div>
+    
+    <div class="preloader-subtext">STACKLY ORGANIC FARM · HARVESTING NATURE</div>
+  </div>
+</div>
+
+<script>
+function triggerLogoPreloader(e) {
+  if (e) e.preventDefault();
+  const preloader = document.getElementById('stacklyPreloader');
+  const fill = document.getElementById('preloaderFill');
+  const targetUrl = (e && e.currentTarget && e.currentTarget.getAttribute('href')) || 'home.html';
+
+  if (preloader && fill) {
+    fill.style.width = '0%';
+    preloader.classList.add('active');
+
+    setTimeout(() => { fill.style.width = '100%'; }, 30);
+
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 650);
+  } else {
+    window.location.href = targetUrl;
+  }
+}
+</script>
+
+</body>
+</html>
