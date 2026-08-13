@@ -134,7 +134,46 @@
     .toast-icon { width:32px; height:32px; border-radius:50%; background:#5B8C4A; color:#fff; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
     .toast-text h6 { font-size:0.95rem; font-weight:700; color:var(--forest-2); margin-bottom:2px; }
     .toast-text p { font-size:0.82rem; color:var(--ink-soft); }
-  </style>
+  
+@media (max-width: 1024px), html.is-mobile, html.is-mobile {
+  header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 12px 20px !important;
+    min-height: 60px !important;
+  }
+  .logo {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .logo-img {
+    height: 36px !important;
+    width: auto !important;
+    max-width: 150px !important;
+  }
+  .menu-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    transform: none !important;
+    font-size: 1.8rem !important;
+    color: var(--paper) !important;
+    z-index: 1002 !important;
+  }
+  nav.links, #loginNavBtn {
+    display: none !important;
+  }
+}
+
+</style>
 <style>
 
 /* ---------- Unique Stackly Agriculture Preloader Overlay ---------- */
@@ -217,6 +256,20 @@
 @keyframes logoGlow { 0% { opacity: 0.85; filter: drop-shadow(0 2px 8px rgba(212, 165, 68, 0.3)); } 100% { opacity: 1; filter: drop-shadow(0 6px 20px rgba(233, 200, 118, 0.9)); } }
 
 </style>
+<script>
+(function(){
+  function syncViewport(){
+    if(window.innerWidth <= 1200){
+      document.documentElement.classList.add('is-mobile');
+    } else {
+      document.documentElement.classList.remove('is-mobile');
+    }
+  }
+  syncViewport();
+  window.addEventListener('resize', syncViewport, {passive: true});
+  window.addEventListener('orientationchange', syncViewport);
+})();
+</script>
 </head>
 <body>
 
